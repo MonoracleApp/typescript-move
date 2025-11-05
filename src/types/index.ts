@@ -3,7 +3,8 @@ export const sui = {
     SMALL: 'u8',
     medium: 'u16',
     large: 'u32',
-    bool: 'bool'
+    bool: 'bool',
+    address: 'address'
 }
 
 export const paramSui = {

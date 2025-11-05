@@ -14,6 +14,10 @@ class Greeting {
         status: sui.bool
     }
 
+    Counter = {
+        value: sui.large
+    }
+
     @Write('User')
     create_user(){}
 
