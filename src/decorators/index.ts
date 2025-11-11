@@ -4,7 +4,14 @@ import { HasProps } from '../types';
 
 function Has(has: HasProps[]) {
     return function(target: any) {
-        Reflect.defineMetadata('module:module', { has }, target);
+        Reflect.defineMetadata('module:has', { has }, target);
+        return target;
+    }
+}
+
+function Vector() {
+    return function(target: any) {
+        Reflect.defineMetadata('module:vector',{}, target);
         return target;
     }
 }
@@ -35,5 +42,6 @@ export {
     Has,
     Module,
     Write,
-    Mint
+    Mint,
+    Vector
 }

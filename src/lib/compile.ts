@@ -19,7 +19,8 @@ export async function compile(filePath: string): Promise<void> {
     
     
 
-    const { STRUCTS, writeValues } = handleStructs(classesJSON[0].properties);
+    const { STRUCTS, writeValues, USE } = handleStructs(classesJSON[0].properties);
+
 
     const WRITE_METHODS = handleWriteMethods(
       classesJSON[0].methods,
@@ -29,9 +30,17 @@ export async function compile(filePath: string): Promise<void> {
 
     // Build the complete Move module
     const moveModule = `module ${moduleName}::${packageName} {
-  use std::string::{Self};
+  
+  // USE
+  ${USE}
+
+  // STRUCTS
   ${STRUCTS}
+
+  // WRITE METHODS
   ${WRITE_METHODS}
+
+  // CUSTOM METHODS
   ${EXEC_METHODS}
 }`;
     const formattedCode = formatMoveCode(moveModule);

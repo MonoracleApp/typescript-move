@@ -1,4 +1,4 @@
-import { Has, Mint, Module, Write } from "./decorators";
+import { Has, Mint, Module, Vector, Write } from "./decorators";
 import { Mut, sui } from "./types";
 import { exec } from "./utils";
 
@@ -20,6 +20,14 @@ class Greeting {
     @Has(['key', 'store'])
     Counter = {
         value: sui.u32
+    }
+
+    @Has(['key', 'store'])
+    @Vector()
+    Project = {
+        name: sui.string,
+        description: sui.string,
+        webSiteUrl: sui.string
     }
 
     @Write('User')

@@ -1,15 +1,19 @@
 import { parseObjectString, parseStringArray } from ".";
 import { HasProps, sui } from "../types";
 
+
 export const handleStructs = (properties: any) => {
   const writeValues: any = {};
+  const use: string[] = []
   const structs = properties
     .map((x: any) => {
+      
       const obj = parseObjectString(x.defaultValue!);
       const keys = Object.keys(obj);
-
+      
       let hasProps: HasProps[] = ["key", "store"];
-
+      
+      const isVector = x.decorators.find((x: any) => x.name === 'Vector') ? true : false
       const selectedHas = x.decorators.filter(
         (decorator: any) => decorator.name === "Has"
       );
@@ -48,21 +52,42 @@ export const handleStructs = (properties: any) => {
         x === 'key'
       )? "id: UID," : "";
 
+      let vector = ''
+
+      if(isVector) {
+          vector = `\npublic struct ${x.name}Registry has key {
+            id: UID,
+            items: vector<address>
+          }\n// Create a registry (only once, maybe by admin)\npublic fun create_${x.name}_registry(ctx: &mut TxContext) {
+            let sender = tx_context::sender(ctx);
+            let registry = ${x.name}Registry {
+              id: object::new(ctx),
+              items: vector::empty<address>(),
+            };
+            transfer::transfer(registry, sender);
+          }`
+      }
 
       // Format struct with proper indentation
       return `public struct ${x.name} has ${hasSet.join(",")} {
        ${idField} ${keys
         .map((key) => {
           const type = obj[key].split(".")[1];
+
+          if(type === 'string' && !use.find(x => x === 'use std::string::{Self};')) {
+            use.push('use std::string::{Self};')
+          }
+
           return `\n  ${key}: ${(sui as any)[type]}`;
         })
         .join(",")}
-    }`;
+    }${vector}`;
     })
     .join("\n\n");
 
   return {
     writeValues,
+    USE: use.map(x => x).join('\n'),
     STRUCTS: structs,
   };
 };
