@@ -21,8 +21,6 @@ export async function compile(filePath: string): Promise<void> {
 
     const { STRUCTS, writeValues } = handleStructs(classesJSON[0].properties);
 
-    console.log(STRUCTS)
-    return
     const WRITE_METHODS = handleWriteMethods(
       classesJSON[0].methods,
       writeValues
@@ -31,7 +29,7 @@ export async function compile(filePath: string): Promise<void> {
 
     // Build the complete Move module
     const moveModule = `module ${moduleName}::${packageName} {
-  use std::string::{Self, String};
+  use std::string::{Self};
   ${STRUCTS}
   ${WRITE_METHODS}
   ${EXEC_METHODS}

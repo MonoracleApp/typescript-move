@@ -1,18 +1,10 @@
 export const sui = {
-    STRING: 'string::String',
-    SMALL: 'u8',
-    medium: 'u16',
-    large: 'u32',
+    string: 'string::String',
+    u8: 'u8',
+    u16: 'u16',
+    u32: 'u32',
     bool: 'bool',
     address: 'address'
-}
-
-export const paramSui = {
-    STRING: 'String',
-    SMALL: 'u8',
-    medium: 'u16',
-    large: 'u32',
-    bool: 'bool'
 }
 
 export type HasProps = 'key'|'store'|'drop'|'copy'

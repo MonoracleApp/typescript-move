@@ -7,9 +7,9 @@ class Greeting {
 
     @Has(['key', 'store'])
     User = {
-        name: sui.STRING,
+        name: sui.string,
         status: sui.bool,
-        age: sui.SMALL
+        age: sui.u8
     }
 
     @Has(['key', 'store'])
@@ -19,20 +19,7 @@ class Greeting {
 
     @Has(['key', 'store'])
     Counter = {
-        value: sui.large
-    }
-
-    @Has(['store', 'drop', 'copy'])
-    Task = {
-        topic: sui.STRING,
-        description: sui.large
-    }
-
-    @Has(['key', 'store'])
-    Hero = {
-        name: sui.STRING,
-        description: sui.STRING,
-        image_url: sui.STRING
+        value: sui.u32
     }
 
     @Write('User')

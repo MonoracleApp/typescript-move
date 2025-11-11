@@ -1,5 +1,5 @@
 import { parseObjectString, parseStringArray } from ".";
-import { HasProps, paramSui, sui } from "../types";
+import { HasProps, sui } from "../types";
 
 export const handleStructs = (properties: any) => {
   const writeValues: any = {};
@@ -29,7 +29,7 @@ export const handleStructs = (properties: any) => {
         keys
           .map((key) => {
             const type = obj[key].split(".")[1];
-            return `${key}: ${(paramSui as any)[type]}`;
+            return `${key}: ${(sui as any)[type]}`;
           })
           .join(", ") + `, ctx: &mut TxContext`;
 
