@@ -41,6 +41,11 @@ export async function compile(filePath: string): Promise<void> {
   
   // USE
   ${USE}
+  ${BALANCES && `
+    use sui::balance;
+    use sui::coin::{Self, Coin};
+    use sui::sui::SUI;
+`}
 
   // STRUCTS
   ${STRUCTS}
