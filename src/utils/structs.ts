@@ -59,13 +59,6 @@ export const handleStructs = (properties: any) => {
           vector = `\npublic struct ${x.name}Registry has key {
             id: UID,
             items: vector<address>
-          }\n// Create a registry (only once, maybe by admin)\npublic fun create_${x.name}_registry(ctx: &mut TxContext) {
-            let sender = tx_context::sender(ctx);
-            let registry = ${x.name}Registry {
-              id: object::new(ctx),
-              items: vector::empty<address>(),
-            };
-            transfer::transfer(registry, sender);
           }\n`
           registryValues[x.name] = {
             functionArgs: `registry: &mut ${x.name}Registry, ${functionArgs}`,
