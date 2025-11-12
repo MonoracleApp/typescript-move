@@ -31,9 +31,17 @@ function Write(key: string) {
 }
 
 
+function Push(key: string) {
+    return function(target: any) {
+        Reflect.defineMetadata('module:push', { key }, target);
+        return target;
+    }
+}
+
+
 function Mint(key: string) {
     return function(target: any) {
-        Reflect.defineMetadata('module:write', { key }, target);
+        Reflect.defineMetadata('module:min', { key }, target);
         return target;
     }
 }
@@ -43,5 +51,6 @@ export {
     Module,
     Write,
     Mint,
-    Vector
+    Vector,
+    Push
 }

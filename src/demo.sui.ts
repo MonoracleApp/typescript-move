@@ -1,4 +1,4 @@
-import { Has, Mint, Module, Vector, Write } from "./decorators";
+import { Has, Mint, Module, Push, Vector, Write } from "./decorators";
 import { Mut, sui } from "./types";
 import { exec } from "./utils";
 
@@ -35,6 +35,10 @@ class Greeting {
 
     @Write('Admin')
     create_admin(){}
+
+
+    @Push('Project')
+    create_project(){}
 
     @Mint('Admin')
     mint_hero(){}

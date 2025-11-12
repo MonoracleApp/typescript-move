@@ -5,6 +5,7 @@ import { formatMoveCode, getSourceFile, parseObjectString } from "../utils";
 import { handleStructs } from "../utils/structs";
 import { handleWriteMethods } from "../utils/write-methods";
 import { handleExecMethods } from "../utils/exec-methods";
+import { handleVectorMethods } from "../utils/vector-methods";
 
 export async function compile(filePath: string): Promise<void> {
   try {
@@ -19,13 +20,19 @@ export async function compile(filePath: string): Promise<void> {
     
     
 
-    const { STRUCTS, writeValues, USE } = handleStructs(classesJSON[0].properties);
+    const { 
+      STRUCTS, 
+      USE,
+      vectorValues,
+      writeValues,
+    } = handleStructs(classesJSON[0].properties);
 
-
+    
     const WRITE_METHODS = handleWriteMethods(
       classesJSON[0].methods,
       writeValues
     );
+    const VECTOR_METHODS = handleVectorMethods(classesJSON[0].methods, vectorValues)
     const EXEC_METHODS = handleExecMethods(classesJSON[0].methods.filter(x => x.decorators.length === 0))
 
     // Build the complete Move module
@@ -39,6 +46,9 @@ export async function compile(filePath: string): Promise<void> {
 
   // WRITE METHODS
   ${WRITE_METHODS}
+
+  // VECTOR METHODS
+  ${VECTOR_METHODS}
 
   // CUSTOM METHODS
   ${EXEC_METHODS}

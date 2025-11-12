@@ -4,6 +4,7 @@ import { HasProps, sui } from "../types";
 
 export const handleStructs = (properties: any) => {
   const writeValues: any = {};
+  const registryValues: any = {}
   const use: string[] = []
   const structs = properties
     .map((x: any) => {
@@ -65,7 +66,11 @@ export const handleStructs = (properties: any) => {
               items: vector::empty<address>(),
             };
             transfer::transfer(registry, sender);
-          }`
+          }\n`
+          registryValues[x.name] = {
+            functionArgs: `registry: &mut ${x.name}Registry, ${functionArgs}`,
+            objArgs: `id: object::new(ctx),${objArgs}`
+          }
       }
 
       // Format struct with proper indentation
@@ -87,6 +92,8 @@ export const handleStructs = (properties: any) => {
 
   return {
     writeValues,
+    vectorValues: registryValues,
+
     USE: use.map(x => x).join('\n'),
     STRUCTS: structs,
   };
