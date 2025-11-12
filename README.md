@@ -1,12 +1,48 @@
-# Demo App - TypeScript to Move Transpiler
+# Demo App - TypeScript to Move Transpiler V2
 
 ## Features
 
+- **Module Decorator (`@Module`)**: Define Move module names with TypeScript classes
+- **Struct Definitions with Type Abilities (`@Has`)**: Add Move abilities like `['key', 'store']` to structs
+- **Balance Management (`@Balance`)**: Automatic generation of balance-related functions (deposit, withdraw, get_balance) for SUI token handling
+- **Vector Support (`@Vector`)**: Create and manage vector collections with automatic registry pattern implementation
+- **Write Methods (`@Write`)**: Generate constructor functions that create and share new on-chain objects
+- **Push Methods (`@Push`)**: Add items to vector collections with automatic ID management
+- **Mint Methods (`@Mint`)**: Create NFT-like objects with minting capabilities
+- **Mutable References (`Mut<T>`)**: Type-safe mutable references for modifying existing objects
+- **Direct Move Code Embedding (`exec`)**: Write Move logic directly in TypeScript using template literals
+- **Type System Support**:
+  - Primitive types: `sui.string`, `sui.bool`, `sui.u8`, `sui.u32`, `sui.u64`
+  - Object types: `sui.UID` for unique identifiers
+  - Balance types: `BalanceFor` for defining balance operations
+- **Automatic Code Generation**:
+  - Struct initialization with `object::new(ctx)`
+  - Transaction context handling (`&mut TxContext`)
+  - Transfer functions (`transfer::share_object`, `transfer::public_transfer`)
+  - Balance operations (`balance::zero`, `balance::join`, `balance::split`)
+
 ## Purpose
 
-This is a TypeScript-to-Move transpiler that allows developers to write Sui smart contracts using familiar JavaScript syntax.
-It aims to lower the entry barrier for web developers who want to explore the Move ecosystem, enabling rapid prototyping and onboarding without deep knowledge of the Move language.
-By combining decorators, classes, and typed structures, MoveJS generates clean, production-ready Move code — helping more developers build on Sui faster.
+### Web3: The Future of the Internet
+
+Web3 represents the next evolution of the internet, where decentralization, ownership, and user empowerment are at the core. As blockchain technology continues to reshape how we interact with digital services, it's crucial to make this transition accessible to the millions of developers already building on the web.
+
+### Why JavaScript for Web3?
+
+JavaScript is the world's most popular programming language, powering everything from websites to mobile apps to server backends. It serves as the universal language of the web. By creating a bridge between JavaScript/TypeScript and Move, we're enabling this massive developer community to participate in the Web3 revolution without starting from scratch.
+
+### Our Mission
+
+This TypeScript-to-Move transpiler is designed to introduce JavaScript developers to the Move ecosystem and the Sui blockchain. Rather than requiring developers to learn an entirely new language paradigm, we provide familiar TypeScript syntax that compiles to production-ready Move code. This approach serves multiple purposes:
+
+- **Educational Tool**: Developers can learn Move concepts while writing in familiar TypeScript syntax
+- **Rapid Prototyping**: Quickly test ideas and build proof-of-concepts without deep Move expertise
+- **Gradual Learning**: See the generated Move code to understand the language patterns and best practices
+- **Community Growth**: Lower the barrier to entry for Web3 development on Sui
+
+By leveraging decorators, classes, and TypeScript's type system, developers can write smart contracts using patterns they already know. The transpiler handles the complexity of Move's unique features like abilities, object model, and ownership system — allowing developers to focus on building innovative Web3 applications.
+
+This tool is not just a transpiler; it's a gateway for traditional web developers to become Web3 builders, accelerating the adoption of blockchain technology and helping create a more decentralized future.
 
 ## Available Commands
 
@@ -189,25 +225,42 @@ export default ClassName
 ### Example Usage
 
 ```
-import { Module, Write } from "./src/decorators";
-import { Mut, sui } from "./src/types";
-import { exec } from "./src/utils";
+import { Balance, Has, Mint, Module, Push, Vector, Write } from "./decorators";
+import { BalanceFor, Mut, sui } from "./types";
+import { exec } from "./utils";
 
 @Module('hello_world')
 class Greeting {
 
+    @Balance()
+    MyWorks: BalanceFor = ['deposit', 'withdraw', 'get_balance']
+
+    @Balance()
+    MyFunds: BalanceFor = ['deposit', 'withdraw']
+
+    @Has(['key', 'store'])
     User = {
-        name: sui.STRING,
+        name: sui.string,
         status: sui.bool,
-        age: sui.SMALL
+        age: sui.u8
     }
 
+    @Has(['key', 'store'])
     Admin = {
         status: sui.bool
     }
 
+    @Has(['key', 'store'])
     Counter = {
-        value: sui.large
+        value: sui.u32
+    }
+
+    @Has(['key', 'store'])
+    @Vector()
+    Project = {
+        name: sui.string,
+        description: sui.string,
+        webSiteUrl: sui.string
     }
 
     @Write('User')
@@ -216,16 +269,19 @@ class Greeting {
     @Write('Admin')
     create_admin(){}
 
+
+    @Push('Project')
+    create_project(){}
+
+    @Mint('Admin')
+    mint_hero(){}
+
     incrementCounter(counterItem: Mut<'Counter'>){
         exec`counterItem.value = counterItem.value + 1;`
     }
 
     multiplyCounter(counterItem: Mut<'Counter'>){
         exec`counterItem.value = counterItem.value * 2;`
-    }
-
-    multiply2Counter(counterItem: Mut<'Counter'>){
-        exec`counterItem.value = counterItem.value * 4;`
     }
 }
 
@@ -255,6 +311,60 @@ Decorators are special annotations that provide metadata about your code and con
   - Automatic `ctx: &mut TxContext` parameter
   - `object::new(ctx)` for unique ID generation
   - `transfer::share_object()` call
+
+##### `@Has(abilities: string[])`
+- **Purpose:** Defines Move abilities for a struct (key, store, drop, copy)
+- **Usage:** Applied to struct properties to specify their blockchain capabilities
+- **Example:** `@Has(['key', 'store'])` generates `has key, store` in Move
+- **Common abilities:**
+  - `key`: Allows the struct to be used as an object (stored at an address)
+  - `store`: Allows the struct to be stored inside other structs
+  - `drop`: Allows the struct to be destroyed/dropped
+  - `copy`: Allows the struct to be copied
+
+##### `@Balance()`
+- **Purpose:** Automatically generates balance management functions for SUI tokens
+- **Usage:** Applied to properties with `BalanceFor` type
+- **Example:** `@Balance() MyWorks: BalanceFor = ['deposit', 'withdraw', 'get_balance']`
+- **Generates:**
+  - `init_MyWorksBalance()`: Initialize a new balance struct
+  - `deposit_MyWorksBalance()`: Deposit SUI coins into the balance
+  - `withdraw_MyWorksBalance()`: Withdraw SUI coins from the balance
+  - `get_balance()`: Get the current balance amount
+- **Creates struct with:**
+  - `id: object::UID`
+  - `total: balance::Balance<SUI>`
+  - `owner: address`
+
+##### `@Vector()`
+- **Purpose:** Creates a vector registry pattern for managing collections
+- **Usage:** Applied together with `@Has` to struct properties
+- **Example:** `@Has(['key', 'store']) @Vector() Project = {...}`
+- **Generates:**
+  - Registry struct with `items: vector<address>`
+  - `create_[Name]_registry()`: Initialize the registry
+  - Automatic vector management in push operations
+- **Use case:** Managing lists of objects on-chain
+
+##### `@Push(structName: string)`
+- **Purpose:** Adds items to a vector collection with automatic ID management
+- **Usage:** Applied to methods that add items to vector registries
+- **Example:** `@Push('Project')` for adding projects to registry
+- **Generated Move code:**
+  - Creates new struct instance
+  - Gets object ID and converts to address
+  - Pushes address to registry's vector
+  - Returns the created object
+- **Requires:** Corresponding struct must have `@Vector()` decorator
+
+##### `@Mint(structName: string)`
+- **Purpose:** Creates mintable NFT-like objects
+- **Usage:** Applied to methods that mint new unique objects
+- **Example:** `@Mint('Admin')` generates a minting function
+- **Features:**
+  - Creates unique, ownable objects
+  - Typically used for NFTs or unique game items
+  - Includes automatic ownership transfer
 
 #### The `exec` Template Literal
 
