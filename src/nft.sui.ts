@@ -10,7 +10,7 @@ class Nfting {
         image_url: sui.string
     }
 
-    @Mint('Hero', {display: true})
+    @Mint('Hero', {display: false})
     @Transfer(['me', 'receiver'])
     mint_hero(){}
 }
