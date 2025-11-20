@@ -47,6 +47,7 @@ export const handleStructs = (properties: any) => {
       writeValues[x.name] = {
         functionArgs,
         objArgs: `id: object::new(ctx),${objArgs}`,
+        raw: keys,
       };
 
       const idField = hasSet.find((x) =>

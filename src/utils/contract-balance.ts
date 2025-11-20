@@ -1,5 +1,4 @@
 import { parseStringArray } from ".";
-import { BalanceFor } from "../types";
 
 export const handleContractBalance = (properties: any,) => {
     const balances = properties.filter((x: any) =>
@@ -65,6 +64,13 @@ export const handleContractBalance = (properties: any,) => {
         `
     }).join('')
 
-    return BALANCE_METHODS
+    return {
+        BALANCE_METHODS,
+        USE: BALANCE_METHODS.length ? `
+            use sui::balance;
+            use sui::coin::{Self, Coin};
+            use sui::sui::SUI;
+        ` : ''
+    }
 };
   

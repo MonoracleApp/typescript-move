@@ -20,11 +20,11 @@ export async function compile(filePath: string): Promise<void> {
     );
     const packageName = classesJSON[0].name?.toLowerCase();
     
-    const BALANCES = handleContractBalance(classesJSON[0].properties)
+    const {BALANCE_METHODS, USE: BALANCE_USES} = handleContractBalance(classesJSON[0].properties)
 
     const { 
       STRUCTS, 
-      USE,
+      USE: STRUCT_USES,
       vectorValues,
       writeValues,
     } = handleStructs(classesJSON[0].properties);
@@ -36,38 +36,34 @@ export async function compile(filePath: string): Promise<void> {
     );
     
     const VECTOR_METHODS = handleVectorMethods(classesJSON[0].methods, vectorValues)
-    const NFT_METHODS = handleNftMethods(classesJSON[0].methods, writeValues)
+    const {NFT_METHODS, USE: NFT_USES, INIT: NFT_INITS} = handleNftMethods(classesJSON[0].methods, writeValues)
     const EXEC_METHODS = handleExecMethods(classesJSON[0].methods.filter(x => x.decorators.length === 0))
-    
+
     // Build the complete Move module
     const moveModule = `module ${moduleName}::${packageName} {
   
   // === Imports ===
-  ${USE}
-  ${BALANCES && `
-    use sui::balance;
-    use sui::coin::{Self, Coin};
-    use sui::sui::SUI;
-`}
-
+  ${STRUCT_USES}
+  // One-Time Witness for the module
+  public struct ${packageName?.toUpperCase()} has drop {}
+  ${NFT_USES}
+  ${BALANCE_USES}
   // === Errors ===
-
   // === Structs ===
   ${STRUCTS}
-
+  // === Init ===
+  fun init(otw: ${packageName?.toUpperCase()}, ctx: &mut TxContext) {
+    let publisher = package::claim(otw, ctx);
+    ${NFT_INITS}
+  }
   // === Public Functions ===
   ${WRITE_METHODS}
-
   ${VECTOR_METHODS}
-
   ${EXEC_METHODS}
-
   // === NFT Functions ===
-
   ${NFT_METHODS}
-
   // === Balance Functions ===
-  ${BALANCES}
+  ${BALANCE_METHODS}
 }`;
     const formattedCode = formatMoveCode(moveModule);
 
