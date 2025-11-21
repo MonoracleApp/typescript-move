@@ -40,6 +40,9 @@ export async function compile(filePath: string): Promise<void> {
 
     const EXEC_METHODS = handleExecMethods(classesJSON[0].methods.filter(x => x.decorators.length === 0))
 
+    console.log(EXEC_METHODS)
+    return
+
     const INITS = NFT_INITS ? `
       fun init(otw: ${packageName?.toUpperCase()}, ctx: &mut TxContext) {
          let publisher = package::claim(otw, ctx);

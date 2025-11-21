@@ -1,5 +1,5 @@
 import { Has, Module, Write } from "./decorators";
-import { Mut, sui } from "./types";
+import { Mut, Primitive, sui } from "./types";
 import { exec } from "./utils";
 
 @Module('hello_world')
@@ -22,6 +22,12 @@ class Writing {
         value: sui.u32
     }
 
+
+    @Has(['key', 'store'])
+    OtherCounter = {
+        value: sui.u32
+    }
+
     @Write('User')
     create_user(){}
 
@@ -31,12 +37,26 @@ class Writing {
     @Write('Counter')
     create_counter(){}
 
-    incrementCounter(counterItem: Mut<'Counter'>){
-        exec`counterItem.value = counterItem.value + 1;`
+
+    @Write('OtherCounter')
+    create_other_counter(){}
+
+    incrementCounter(counterItem: Mut<'Counter'>, otherCounterItem: Mut<'Counter'>){
+        exec`
+            counterItem.value = counterItem.value + 1;
+            otherCounterItem.value = otherCounterItem.value + 1;
+        `
     }
 
-    multiplyCounter(counterItem: Mut<'Counter'>){
-        exec`counterItem.value = counterItem.value * 2;`
+    multiplyCounter(counterItem: Mut<'Counter'>, otherCounterItem: Mut<'Counter'>){
+        exec`
+            counterItem.value = counterItem.value * 2;
+            otherCounterItem.value = otherCounterItem.value * 2;
+        `
+    }
+
+    changeName(userObj: Mut<'User'>, nameUser: Primitive<'string::String'>){
+
     }
 }
 
