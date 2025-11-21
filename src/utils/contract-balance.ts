@@ -32,7 +32,7 @@ export const handleContractBalance = (properties: any,) => {
         }
 
         if(functions.find((x) => x === 'get_balance')){
-            getBalanceFn = `public fun get_balance(balance_obj: &MyFundsBalance): u64 {
+            getBalanceFn = `public fun get_balance(balance_obj: &${balanceVariable}): u64 {
                 balance::value(&balance_obj.total)
             }`
         }
