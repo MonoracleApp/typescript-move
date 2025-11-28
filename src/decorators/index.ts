@@ -9,9 +9,9 @@ function Has(has: HasProps[]) {
     }
 }
 
-function Vector() {
+function Vector(struct: string) {
     return function(target: any) {
-        Reflect.defineMetadata('module:vector',{}, target);
+        Reflect.defineMetadata('module:vector',{struct}, target);
         return target;
     }
 }
@@ -69,5 +69,5 @@ export {
     Mint,
     Vector,
     Push,
-    Transfer
+    Transfer,
 }

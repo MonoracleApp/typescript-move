@@ -16,3 +16,7 @@ export interface Mut<T> {}
 export interface Primitive<T extends 'u8'|'u16'|'u32'|'u64'|'u128'|'u256'|'bool'|'address'|'string::String'|'ascii::String'|'vector<u8>'|'vector<address>'|'vector<string::String>'|'vector<vector<u8>>'>{}
 
 export type TransferType = 'me' | 'receiver' 
+
+export interface SuiVector {
+    maxLength?: number
+}
