@@ -22,7 +22,6 @@ class Writing {
         value: sui.u32
     }
 
-
     @Has(['key', 'store'])
     OtherCounter = {
         value: sui.u32
@@ -36,7 +35,6 @@ class Writing {
 
     @Write('Counter')
     create_counter(){}
-
 
     @Write('OtherCounter')
     create_other_counter(){}
@@ -56,7 +54,9 @@ class Writing {
     }
 
     changeName(userObj: Mut<'User'>, nameUser: Primitive<'string::String'>){
-
+        exec`
+            userObj.name = nameUser;
+        `
     }
 }
 
