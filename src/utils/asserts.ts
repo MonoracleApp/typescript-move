@@ -1,4 +1,4 @@
-export const handleAsserts = (asserts: {must: string, code: string}[]) => {
+export const handleAsserts = (asserts: {must: string, code: string}[], constants: Record<string, string> = {}) => {
     const result = asserts.map((x) => {
         const { must, code } = x
         const variable = code.split('.')[1]
@@ -11,9 +11,19 @@ export const handleAsserts = (asserts: {must: string, code: string}[]) => {
             return `assert!(string::length(&${varName[1]}) >= ${num[1]}, ${variable});`
         }
         if(must.startsWith('Assertion.onlyFor(')){
-            return `assert!(tx_context::sender(ctx) == OWNER, ${variable});`
+            const addrReg = /Assertion\.onlyFor\(([^)]+)\)/
+            const addrMatch = must.match(addrReg)
+            let address = addrMatch?.[1] || ''
+
+            if (constants[address]) {
+                address = constants[address]
+            }
+
+            address = address.replace(/['"]/g, '')
+
+            return `assert!(tx_context::sender(ctx) == @${address}, ${variable});`
         }
         return `assert!(${must.replace(/'/g, "")}, ${variable});`
     }).join('\n')
-    console.log(result)
+    return result
 }

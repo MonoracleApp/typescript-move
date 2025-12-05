@@ -13,7 +13,7 @@ import { handleErrorCodes } from "../utils/error-codes";
 export async function compile(filePath: string): Promise<void> {
   try {
     await filePathSchema.validate(filePath);
-    const classesJSON = getSourceFile(filePath);
+    const { classesJSON, constants } = getSourceFile(filePath);
 
     const moduleName = classesJSON[0].decorators[0].arguments[0].replace(
       /'/g,
@@ -34,9 +34,9 @@ export async function compile(filePath: string): Promise<void> {
     
     const {WRITE_METHODS} = handleWriteMethods(
       classesJSON[0].methods,
-      writeValues
+      writeValues,
+      constants
     );
-    return
     const VECTOR_METHODS = handleVectorMethods(classesJSON[0].methods, vectorValues)
     
     const {NFT_METHODS, USE: NFT_USES, INIT: NFT_INITS} = handleNftMethods(classesJSON[0].methods, writeValues)

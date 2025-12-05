@@ -35,6 +35,14 @@ export function getSourceFile(filePath: string) {
     fs.readFileSync(filePath, "utf-8")
   );
 
+  const constants: Record<string, string> = {};
+  sourceFile.getVariableDeclarations().forEach((v) => {
+    const value = v.getInitializer()?.getText();
+    if (value) {
+      constants[v.getName()] = value;
+    }
+  });
+
   const classesJSON = sourceFile.getClasses().map((cls) => ({
     name: cls.getName(),
     decorators: cls.getDecorators().map((d) => ({
@@ -87,7 +95,7 @@ export function getSourceFile(filePath: string) {
     })),
   }));
 
-  return classesJSON;
+  return { classesJSON, constants };
 }
 
 export function formatMoveCode(code: string): string {
