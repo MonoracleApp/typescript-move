@@ -6,19 +6,20 @@ export interface MethodAssertion {
     assertions: ParsedAssertion[]
 }
 
-export const handleErrorCodes = (methods: any): MethodAssertion[] => {
+export const handleErrorCodes = (methods: any): string => {
     const asserts = methods.filter((x: any) => x.decorators.find((y: any) => y.name === 'Assert'))
+    const errorCodes = new Set<string>()
 
-    return asserts.map((assert: any) => {
+    asserts.forEach((assert: any) => {
         const decorator = assert.decorators.find((x: any) => x.name === 'Assert')
         const argumentString = decorator.arguments[0]
         const parsed = parseAssertions(argumentString) as any
-        const variables = parsed.map((x: any) => {
-            const variable = x.code.split('.')
-            const fieldName = variable[1]
+        parsed.forEach((x: any) => {
+            const fieldName = x.code.split('.')[1]
             const fieldValue = (Assertion as any)[fieldName]
-            return `const ${fieldName}: u64 = ${fieldValue};`
-        }).join('\n')
-        return variables
-    }).join('\n')
+            errorCodes.add(`const ${fieldName}: u64 = ${fieldValue};`)
+        })
+    })
+
+    return [...errorCodes].join('\n')
 }

@@ -1,4 +1,4 @@
-import { Has, Module, Vector, Write } from "./decorators";
+import { Has, Module, Move, Vector, Write } from "./decorators";
 import { Mut, Primitive, sui, SuiVector } from "./types";
 import { exec } from "./utils";
 
@@ -44,6 +44,7 @@ class Writing {
     @Write('OtherCounter')
     create_other_counter(){}
 
+    @Move()
     incrementCounter(counterItem: Mut<'Counter'>, otherCounterItem: Mut<'Counter'>){
         exec`
             counterItem.value = counterItem.value + 1;
@@ -51,6 +52,7 @@ class Writing {
         `
     }
 
+    @Move()
     multiplyCounter(counterItem: Mut<'Counter'>, otherCounterItem: Mut<'Counter'>){
         exec`
             counterItem.value = counterItem.value * 2;
@@ -58,6 +60,7 @@ class Writing {
         `
     }
 
+    @Move()
     changeName(userObj: Mut<'User'>, nameUser: Primitive<'string::String'>){
         exec`
             userObj.name = nameUser;

@@ -1,5 +1,20 @@
-export const handleAsserts = (asserts: {must: string, code: string}[], constants: Record<string, string> = {}) => {
-    const result = asserts.map((x) => {
+import { parseAssertions } from "."
+
+const getAssertValues = (asserts: any) => {
+    if (!asserts || !asserts.arguments) {
+      return []
+    }
+
+    const parsedAssertions = asserts.arguments.flatMap((arg: string) =>
+      parseAssertions(arg)
+    )
+
+    return parsedAssertions
+}
+
+export const handleAsserts = (asserts: any, constants: Record<string, string> = {}) => {
+    const parsedAsserts = getAssertValues(asserts)
+    const result = parsedAsserts.map((x: {must: string, code: string}) => {
         const { must, code } = x
         const variable = code.split('.')[1]
         if(must.startsWith('Assertion.min(')){

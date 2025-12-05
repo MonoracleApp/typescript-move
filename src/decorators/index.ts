@@ -61,6 +61,13 @@ function Balance() {
     }
 }
 
+function Move(){
+    return function(target: any) {
+        Reflect.defineMetadata('module:balance', { }, target);
+        return target;
+    }
+}
+
 function Transfer(transferType: TransferType[]){
     return function(target: any) {
         Reflect.defineMetadata('module:transfer', { }, target);
@@ -78,4 +85,5 @@ export {
     Push,
     Transfer,
     Assert,
+    Move
 }

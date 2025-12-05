@@ -22,27 +22,21 @@ export async function compile(filePath: string): Promise<void> {
     const packageName = classesJSON[0].name?.toLowerCase();
     
     const {BALANCE_METHODS, USE: BALANCE_USES} = handleContractBalance(classesJSON[0].properties)
-
     const ERROR_CODES = handleErrorCodes(classesJSON[0].methods)
-
     const { 
       STRUCTS, 
       USE: STRUCT_USES,
       vectorValues,
       writeValues,
     } = handleStructs(classesJSON[0].properties);
-    
     const {WRITE_METHODS} = handleWriteMethods(
       classesJSON[0].methods,
       writeValues,
       constants
     );
     const VECTOR_METHODS = handleVectorMethods(classesJSON[0].methods, vectorValues)
-    
     const {NFT_METHODS, USE: NFT_USES, INIT: NFT_INITS} = handleNftMethods(classesJSON[0].methods, writeValues)
-
-    const EXEC_METHODS = handleExecMethods(classesJSON[0].methods.filter(x => x.decorators.length === 0))
-
+    const EXEC_METHODS = handleExecMethods(classesJSON[0].methods, constants)
     const INITS = NFT_INITS ? `
       fun init(otw: ${packageName?.toUpperCase()}, ctx: &mut TxContext) {
          let publisher = package::claim(otw, ctx);
