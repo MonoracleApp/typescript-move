@@ -1,14 +1,14 @@
 import * as yup from "yup";
 import chalk from "chalk";
 import { filePathSchema } from "../schemas/file-path.schema";
-import { formatMoveCode, getSourceFile, parseObjectString } from "../utils";
+import { formatMoveCode, getSourceFile } from "../utils";
 import { handleStructs } from "../utils/structs";
 import { handleWriteMethods } from "../utils/write-methods";
 import { handleExecMethods } from "../utils/exec-methods";
 import { handleVectorMethods } from "../utils/vector-methods";
 import { handleContractBalance } from "../utils/contract-balance";
 import { handleNftMethods } from "../utils/nft-methods";
-import { handleAssert } from "../utils/assert";
+import { handleErrorCodes } from "../utils/error-codes";
 
 export async function compile(filePath: string): Promise<void> {
   try {
@@ -23,7 +23,7 @@ export async function compile(filePath: string): Promise<void> {
     
     const {BALANCE_METHODS, USE: BALANCE_USES} = handleContractBalance(classesJSON[0].properties)
 
-    const ASSERTS = handleAssert(classesJSON[0].methods)
+    const ERROR_CODES = handleErrorCodes(classesJSON[0].methods)
 
     const { 
       STRUCTS, 
@@ -59,6 +59,7 @@ export async function compile(filePath: string): Promise<void> {
   ${NFT_USES}
   ${BALANCE_USES}
   // === Errors ===
+  ${ERROR_CODES}
   // === Structs ===
   ${STRUCTS}
   // === Init ===
