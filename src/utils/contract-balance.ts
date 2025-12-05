@@ -2,7 +2,7 @@ import { parseStringArray } from ".";
 import chalk from "chalk";
 import { getAssertValues, getVarsandValues } from "./asserts";
 
-export const handleContractBalance = (properties: any, constants: Record<string, string> = {}) => {
+export const handleContractBalance = (properties: any) => {
     const balances = properties.filter((x: any) =>
       x.decorators.find((y: any) => y.name === "Balance")
     );
@@ -108,14 +108,14 @@ export const handleContractBalance = (properties: any, constants: Record<string,
                owner: address,
             }
             \n
-            public fun init_${balanceVariable}(ctx: &mut TxContext) : ${balanceVariable} {
+            public fun init_${balanceVariable}(ctx: &mut TxContext) {
                 let sender = tx_context::sender(ctx);
                 let obj = ${balanceVariable} {
                     id: object::new(ctx),
                     total: balance::zero<SUI>(),
                     owner: sender,
                 };
-                return obj
+                transfer::public_share_object(obj);
             }
 
             // DEPOSIT FOR ${balanceVariable}
