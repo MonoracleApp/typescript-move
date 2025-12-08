@@ -34,7 +34,8 @@ export async function compile(filePath: string): Promise<void> {
       writeValues,
       constants
     );
-    const VECTOR_METHODS = handleVectorMethods(classesJSON[0].methods, vectorValues)
+    const VECTOR_METHODS = handleVectorMethods(classesJSON[0].methods)
+    return
     const {NFT_METHODS, USE: NFT_USES, INIT: NFT_INITS} = handleNftMethods(classesJSON[0].methods, writeValues, constants)
     const EXEC_METHODS = handleExecMethods(classesJSON[0].methods, constants)
     const INITS = NFT_INITS ? `

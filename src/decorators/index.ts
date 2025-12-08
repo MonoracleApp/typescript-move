@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { HasProps, TransferType } from '../types';
+import { HasProps, TransferType, VectorFeatures } from '../types';
 
 
 function Has(has: HasProps[]) {
@@ -16,9 +16,9 @@ function Assert(assertion: {must: string, code: number}[]) {
     }
 }
 
-function Vector(struct: string) {
+function Vector(features: VectorFeatures[]) {
     return function(target: any) {
-        Reflect.defineMetadata('module:vector',{struct}, target);
+        Reflect.defineMetadata('module:vector',{}, target);
         return target;
     }
 }

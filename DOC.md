@@ -302,7 +302,6 @@ PersonList: SuiVector = {
 | `Mut<T>` | Mutable reference to object | `userObj: Mut<'User'>` |
 | `Primitive<T>` | Move primitive type | `name: Primitive<'string::String'>` |
 | `BalanceFor` | Balance operation tuple | `['deposit', 'withdraw', 'get_balance']` |
-| `SuiVector` | Vector configuration | `{ maxLength: 100 }` |
 
 ---
 

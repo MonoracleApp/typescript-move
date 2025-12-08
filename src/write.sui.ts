@@ -1,5 +1,5 @@
-import { Has, Module, Move, Vector, Write } from "./decorators";
-import { Mut, Primitive, sui, SuiVector } from "./types";
+import { Has, Module, Move, Write } from "./decorators";
+import { Mut, Primitive, sui } from "./types";
 import { exec } from "./utils";
 
 @Module('hello_world')
@@ -25,11 +25,6 @@ class Writing {
     @Has(['key', 'store'])
     OtherCounter = {
         value: sui.u32
-    }
-
-    @Vector('User')
-    PersonList: SuiVector = {
-        maxLength: 100
     }
 
     @Write('User')

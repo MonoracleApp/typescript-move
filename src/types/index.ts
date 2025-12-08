@@ -17,6 +17,5 @@ export interface Primitive<T extends 'u8'|'u16'|'u32'|'u64'|'u128'|'u256'|'bool'
 
 export type TransferType = 'me' | 'receiver' 
 
-export interface SuiVector {
-    maxLength?: number
-}
+export type VectorFeatures = 'add'|'count'|'get'
+
