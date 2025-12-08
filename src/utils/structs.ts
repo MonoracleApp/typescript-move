@@ -6,6 +6,7 @@ export const handleStructs = (properties: any) => {
   const writeValues: any = {};
   const registryValues: any = {}
   const use: string[] = []
+  console.log(properties)
   const structs = properties
     .map((x: any) => {
       
