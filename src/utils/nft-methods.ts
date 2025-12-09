@@ -20,12 +20,13 @@ const handleTransfer = (
   const z = parseStringArray(TRANSFER_METHOD.arguments[0]);
   const HAS_ME = z.find((x: any) => x === "me");
   const HAS_RECEIVER = z.find((x: any) => x === "receiver");
+  console.log(writeValues[struct])
 
   if (HAS_ME) {
     transferMeFn = `
         #[allow(lint(self_transfer))]
         public fun ${methodName}_transfer(${writeValues[struct].functionArgs}){
-          let nft = mint_${variable}(name, description, image_url, ctx);
+          let nft = mint_${variable}(${writeValues[struct].raw.join(',')}, ctx);
           let sender = tx_context::sender(ctx);
           transfer::transfer(nft, sender);
         }`;
@@ -35,7 +36,7 @@ const handleTransfer = (
     transferToFn = `
       #[allow(lint(self_transfer))]
       public fun ${methodName}_transfer_to(recipient: address, ${writeValues[struct].functionArgs}){
-        let nft = mint_${variable}(name, description, image_url, ctx);
+        let nft = mint_${variable}(${writeValues[struct].raw.join(',')}, ctx);
         transfer::transfer(nft, recipient);
       }
     `;
