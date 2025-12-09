@@ -60,7 +60,7 @@ export const handleStructs = (properties: any) => {
 
          const types = keys.map((key) => {
           const type = obj[key].split(".")[1];
-          return (primitive as any)[type] 
+          return (sui as any)[type] 
          }).join(',')
 
         vectorValues.push({
