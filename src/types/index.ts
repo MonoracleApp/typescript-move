@@ -3,6 +3,17 @@ export const sui = {
     u8: 'u8',
     u16: 'u16',
     u32: 'u32',
+    u64: 'u64',
+    bool: 'bool',
+    address: 'address'
+}
+
+export const primitive = {
+    string: 'String',
+    u8: 'u8',
+    u16: 'u16',
+    u32: 'u32',
+    u64: 'u64',
     bool: 'bool',
     address: 'address'
 }

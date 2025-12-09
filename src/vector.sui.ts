@@ -8,7 +8,7 @@ class Peoplei {
     People = {
         name: sui.string,
         lastname: sui.string,
-        age: sui.u8
+        age: sui.u32
     }
 
 }

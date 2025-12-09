@@ -1,5 +1,5 @@
 import { parseObjectString, parseStringArray } from ".";
-import { HasProps, sui } from "../types";
+import { HasProps, primitive, sui } from "../types";
 
 
 export const handleStructs = (properties: any) => {
@@ -35,6 +35,7 @@ export const handleStructs = (properties: any) => {
         const type = obj[key].split(".")[1];
         return `${key}: ${(sui as any)[type]}`;
       })
+
       const functionArgs = params.join(", ") + `, ctx: &mut TxContext`;
 
       const objArgs = keys
@@ -56,13 +57,20 @@ export const handleStructs = (properties: any) => {
           id: UID,
           ${structItem}: vector<${structName}>,
         }\n`  
+
+         const types = keys.map((key) => {
+          const type = obj[key].split(".")[1];
+          return (primitive as any)[type] 
+         }).join(',')
+
         vectorValues.push({
           vectorStruct, 
           structName, 
           structItem, 
           decoratorMeta: isVector,
           raw: params.join(','),
-          keys: keys.join(',')
+          keys: keys.join(','),
+          types
         })
       }  
 
