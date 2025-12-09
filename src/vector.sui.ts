@@ -5,7 +5,7 @@ import { sui } from "./types";
 class Peoplei {
 
     @Vector(['add', 'count', 'get'])
-    Person = {
+    People = {
         name: sui.string,
         lastname: sui.string,
         age: sui.u8

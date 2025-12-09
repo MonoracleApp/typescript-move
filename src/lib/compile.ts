@@ -29,13 +29,13 @@ export async function compile(filePath: string): Promise<void> {
       vectorValues,
       writeValues,
     } = handleStructs(classesJSON[0].properties);
-    return
+
     const {WRITE_METHODS} = handleWriteMethods(
       classesJSON[0].methods,
       writeValues,
       constants
     );
-    const VECTOR_METHODS = handleVectorMethods(classesJSON[0].properties)
+    const VECTOR_METHODS = handleVectorMethods(vectorValues)
     const {NFT_METHODS, USE: NFT_USES, INIT: NFT_INITS} = handleNftMethods(classesJSON[0].methods, writeValues, constants)
     const EXEC_METHODS = handleExecMethods(classesJSON[0].methods, constants)
     const INITS = NFT_INITS ? `
@@ -53,19 +53,21 @@ export async function compile(filePath: string): Promise<void> {
   public struct ${packageName?.toUpperCase()} has drop {}
   ${NFT_USES}
   ${BALANCE_USES}
-  // === Errors ===
+
   ${ERROR_CODES}
-  // === Structs ===
+
   ${STRUCTS}
-  // === Init ===
+
   ${INITS}
-  // === Public Functions ===
+
   ${WRITE_METHODS}
+
   ${VECTOR_METHODS}
+
   ${EXEC_METHODS}
-  // === NFT Functions ===
+
   ${NFT_METHODS}
-  // === Balance Functions ===
+
   ${BALANCE_METHODS}
 }`;
     const formattedCode = formatMoveCode(moveModule);
