@@ -3,6 +3,7 @@ import { showHelp } from "./lib/show-help";
 import { showVersion } from "./lib/show-version";
 import { compile } from "./lib/compile";
 import { create } from "./lib/create";
+import { compileV2 } from "./lib/compile-v2";
 
 /**
  * Main CLI entry point
@@ -36,8 +37,7 @@ export class CLI {
         break;
       case "--compileV2":
       case "-cV2":
-        // const filePath = this.args[1];
-        // await compile(filePath);
+        await compileV2(this.args[1]);
         break;
       case "--compile":
       case "-c":
