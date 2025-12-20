@@ -26,21 +26,26 @@ export class CLI {
     const command = this.args[0];
 
     switch (command) {
-      case '--help':
-      case '-h':
+      case "--help":
+      case "-h":
         showHelp();
         break;
-      case '--version':
-      case '-v':
+      case "--version":
+      case "-v":
         showVersion();
         break;
-      case '--compile':
-      case '-c':
+      case "--compileV2":
+      case "-cV2":
+        // const filePath = this.args[1];
+        // await compile(filePath);
+        break;
+      case "--compile":
+      case "-c":
         const filePath = this.args[1];
         await compile(filePath);
         break;
-      case '--create':
-      case '-cr':
+      case "--create":
+      case "-cr":
         await create();
         break;
       default:
@@ -49,14 +54,13 @@ export class CLI {
         process.exit(1);
     }
   }
-
 }
 
 // Run CLI if this file is executed directly
 if (require.main === module) {
   const cli = new CLI();
   cli.run().catch((error) => {
-    console.error('Fatal error:', error);
+    console.error("Fatal error:", error);
     process.exit(1);
   });
 }
