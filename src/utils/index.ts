@@ -192,3 +192,87 @@ export const parseAssertions = (argumentString: string): ParsedAssertion[] => {
 
   return assertions
 }
+
+export function getSourceFileV2(filePath: string) {
+  const project = new Project();
+
+  const sourceFile = project.createSourceFile(
+    "Contract.ts",
+    fs.readFileSync(filePath, "utf-8")
+  );
+
+  const constants: Record<string, string> = {};
+  sourceFile.getVariableDeclarations().forEach((v) => {
+    const value = v.getInitializer()?.getText();
+    if (value) {
+      constants[v.getName()] = value;
+    }
+  });
+
+  // Parse imports
+  const imports = sourceFile.getImportDeclarations().map((imp) => {
+    const moduleSpecifier = imp.getModuleSpecifierValue();
+    const namedImports = imp.getNamedImports().map((ni) => ni.getName());
+    const defaultImport = imp.getDefaultImport()?.getText();
+
+    return {
+      moduleSpecifier,
+      namedImports,
+      defaultImport
+    };
+  });
+
+  const classesJSON = sourceFile.getClasses().map((cls) => ({
+    name: cls.getName(),
+    decorators: cls.getDecorators().map((d) => ({
+      name: d.getName(),
+      arguments: d.getArguments().map((arg) => arg.getText()),
+    })),
+    properties: cls.getProperties().map((p) => {
+      const type = p.getType();
+      const typeText = type.getText();
+
+      let typeDetails = null;
+      if (type.isObject() && typeText.startsWith("{")) {
+        const properties = type.getProperties();
+        typeDetails = properties.map((prop) => ({
+          name: prop.getName(),
+          type: prop.getValueDeclaration()?.getType().getText() || "unknown",
+        }));
+      }
+
+      return {
+        name: p.getName(),
+        type: typeText,
+        typeDetails: typeDetails,
+        defaultValue: p.getInitializer()?.getText() || null,
+        decorators: p.getDecorators().map((d) => ({
+          name: d.getName(),
+          arguments: d.getArguments().map((arg) => arg.getText()),
+        })),
+      };
+    }),
+    constructors: cls.getConstructors().map((c) => ({
+      parameters: c.getParameters().map((p) => ({
+        name: p.getName(),
+        type: p.getType().getText(),
+      })),
+    })),
+
+    methods: cls.getMethods().map((m) => ({
+      name: m.getName(),
+      returnType: m.getReturnType().getText(),
+      parameters: m.getParameters().map((p) => ({
+        name: p.getName(),
+        type: p.getType().getText(),
+      })),
+      decorators: m.getDecorators().map((d) => ({
+        name: d.getName(),
+        arguments: d.getArguments().map((arg) => arg.getText()),
+      })),
+      body: m.getBody()?.getText().replace(/\n\s*/g, " ").trim() || null,
+    })),
+  }));
+
+  return { classesJSON, constants, imports };
+}
