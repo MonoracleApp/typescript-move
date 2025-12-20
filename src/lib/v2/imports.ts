@@ -4,7 +4,7 @@ interface ImportInfo {
   defaultImport?: string;
 }
 
-export function generateMoveImports(imports: ImportInfo[]): string[] {
+export function generateMoveImports(imports: ImportInfo[]): string {
   const moveImports: string[] = [];
 
   // Check if String type is imported
@@ -16,5 +16,7 @@ export function generateMoveImports(imports: ImportInfo[]): string[] {
     moveImports.push("use std::string::{Self};");
   }
 
-  return moveImports;
+  return moveImports.length > 0
+    ? moveImports.join('\n') + '\n'
+    : '';
 }

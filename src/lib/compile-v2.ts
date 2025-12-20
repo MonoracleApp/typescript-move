@@ -15,12 +15,9 @@ export async function compileV2(filePath: string): Promise<void> {
     const packageName = classesJSON[0].name?.toLowerCase();
     const moveImports = generateMoveImports(imports);
 
-    moveImports.forEach((imp) => console.log(imp));
-    console.log(moveImports);
-
     const contract = `
       module ${moduleName}::${packageName} {
-
+        ${moveImports}
       }
     `;
 
