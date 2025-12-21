@@ -66,6 +66,12 @@ function transformMethodBody(body: string): string {
     "sui::transfer::transfer($1)"
   );
 
+  // Transform Transfer.freezeObject<Type>(obj) -> sui::transfer::public_freeze_object(obj)
+  transformed = transformed.replace(
+    /Transfer\.freezeObject<[^>]+>\(([^)]+)\)/g,
+    "sui::transfer::public_freeze_object($1)"
+  );
+
   // Transform TxContext.sender(ctx) -> sui::tx_context::sender(ctx)
   transformed = transformed.replace(
     /TxContext\.sender\(([^)]+)\)/g,

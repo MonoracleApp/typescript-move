@@ -5,11 +5,13 @@ import { Person } from "./structs/person.struct";
 import { Counter } from "./structs/counter.struct";
 import { SuiObject } from "../src/lib/v2/sui-object";
 import { TxContext } from "../src/lib/v2/tx-context";
+import { Winner } from "./structs/winner.struct";
 
 @Module("version2")
 export class Writei {
   person?: Person;
   counter?: Counter;
+  winner?: Winner;
 
   @Public()
   createPerson(name: String, lastname: String, age: u64, ctx: TxContext) {
@@ -26,5 +28,14 @@ export class Writei {
   createCounter(value: u64, ctx: TxContext) {
     let newCounter: Counter = { id: SuiObject.createObjectId(ctx), value };
     Transfer.shareObject<Counter>(newCounter);
+  }
+
+  @Public()
+  createWinner(username: String, ctx: TxContext) {
+    let newWinner: Winner = {
+      id: SuiObject.createObjectId(ctx),
+      username,
+    };
+    Transfer.freezeObject<Winner>(newWinner);
   }
 }

@@ -13,7 +13,7 @@ freeze[]
 owned[x]
 share[x]
 event[]
-public/private[]
+public/private[x]
 example method[]
 --
 
