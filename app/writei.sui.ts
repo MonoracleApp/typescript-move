@@ -52,4 +52,14 @@ export class Writei {
     };
     Transfer.freezeObject<Winner>(newWinner);
   }
+
+  @Public()
+  getUser(person: Person) {
+    const name = person.name;
+    const lastname = person.lastname;
+    return {
+      name,
+      lastname,
+    };
+  }
 }
