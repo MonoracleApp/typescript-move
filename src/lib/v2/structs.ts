@@ -22,7 +22,7 @@ function mapTypeScriptToMove(tsType: string): string {
 
   // Direct mappings
   const typeMap: Record<string, string> = {
-    'String': 'string::String',
+    'String': 'String',
     'u64': 'u64',
     'u32': 'u32',
     'u8': 'u8',
@@ -31,6 +31,7 @@ function mapTypeScriptToMove(tsType: string): string {
     'u256': 'u256',
     'bool': 'bool',
     'address': 'address',
+    'UID': 'sui::object::UID',
   };
 
   return typeMap[cleanType] || cleanType;
@@ -86,17 +87,7 @@ export function generateMoveStructs(structs: StructInfo[]): string {
       : '';
 
     // Generate properties
-    let allProperties = [...struct.properties];
-
-    // If struct has "key" ability, add id: UID as the first property
-    if (struct.abilities.includes('key')) {
-      allProperties = [
-        { name: 'id', type: 'UID' },
-        ...struct.properties
-      ];
-    }
-
-    const properties = allProperties
+    const properties = struct.properties
       .map(prop => `    ${prop.name}: ${mapTypeScriptToMove(prop.type)}`)
       .join(',\n');
 

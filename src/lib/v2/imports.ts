@@ -22,13 +22,8 @@ export function generateMoveImports(
   );
 
   if (hasStringImport) {
-    moveImports.push("use std::string::{Self};");
+    moveImports.push("use std::string::String;");
   }
-
-  // Check if any struct has "key" ability (needs UID)
-  const hasKeyAbility = structs?.some((struct) =>
-    struct.abilities.includes("key")
-  );
 
   return moveImports.length > 0 ? moveImports.join("\n") + "\n" : "";
 }

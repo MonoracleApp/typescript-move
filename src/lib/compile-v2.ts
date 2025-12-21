@@ -4,6 +4,7 @@ import { filePathSchema } from "../schemas/file-path.schema";
 import { formatMoveCode, getSourceFileV2 } from "../utils";
 import { generateMoveImports } from "./v2/imports";
 import { generateMoveStructs, validateStructAbilities } from "./v2/structs";
+import { generateMoveFunctions } from "./v2/methods";
 
 export async function compileV2(filePath: string): Promise<void> {
   try {
@@ -18,13 +19,19 @@ export async function compileV2(filePath: string): Promise<void> {
     // Validate struct abilities before generating code
     validateStructAbilities(interfaces);
 
+    // Extract methods from class
+    const methods = classesJSON[0].methods || [];
+
+    // Generate Move code
     const moveStructs = generateMoveStructs(interfaces);
+    const moveFunctions = generateMoveFunctions(methods);
     const moveImports = generateMoveImports(imports, interfaces);
 
     const contract = `
       module ${moduleName}::${packageName} {
         ${moveImports}
         ${moveStructs}
+        ${moveFunctions}
       }
     `;
 

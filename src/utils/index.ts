@@ -225,10 +225,15 @@ export function getSourceFileV2(filePath: string) {
 
   // Parse interfaces (for struct definitions)
   const interfacesJSON = sourceFile.getInterfaces().map((iface) => {
-    const properties = iface.getProperties().map((p) => ({
-      name: p.getName(),
-      type: p.getType().getText(),
-    }));
+    const properties = iface.getProperties().map((p) => {
+      let type = p.getType().getText();
+      // Remove "| undefined" from optional fields
+      type = type.replace(/\s*\|\s*undefined/g, '');
+      return {
+        name: p.getName(),
+        type: type,
+      };
+    });
 
     // Extract abilities from Has<> extends
     let abilities: string[] = [];
@@ -268,10 +273,15 @@ export function getSourceFileV2(filePath: string) {
 
           // Parse interfaces from imported file
           importedFile.getInterfaces().forEach((iface) => {
-            const properties = iface.getProperties().map((p) => ({
-              name: p.getName(),
-              type: p.getType().getText(),
-            }));
+            const properties = iface.getProperties().map((p) => {
+              let type = p.getType().getText();
+              // Remove "| undefined" from optional fields
+              type = type.replace(/\s*\|\s*undefined/g, '');
+              return {
+                name: p.getName(),
+                type: type,
+              };
+            });
 
             let abilities: string[] = [];
             const heritageClause = iface.getExtends();
