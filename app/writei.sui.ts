@@ -1,4 +1,4 @@
-import { Module } from "../src/decorators";
+import { Module, Public } from "../src/decorators";
 import { String, u64 } from "../src/lib/v2/types";
 import { Transfer } from "../src/lib/v2/transfer";
 import { Person } from "./structs/person.struct";
@@ -11,6 +11,7 @@ export class Writei {
   person?: Person;
   counter?: Counter;
 
+  @Public()
   createPerson(name: String, lastname: String, age: u64, ctx: TxContext) {
     let newPerson: Person = {
       id: SuiObject.createObjectId(ctx),
@@ -21,6 +22,7 @@ export class Writei {
     Transfer.transfer<Person>(newPerson, TxContext.sender(ctx));
   }
 
+  @Public()
   createCounter(value: u64, ctx: TxContext) {
     let newCounter: Counter = { id: SuiObject.createObjectId(ctx), value };
     Transfer.shareObject<Counter>(newCounter);
