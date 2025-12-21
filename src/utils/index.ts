@@ -195,6 +195,7 @@ export const parseAssertions = (argumentString: string): ParsedAssertion[] => {
 
 export function getSourceFileV2(filePath: string) {
   const project = new Project();
+  const path = require('path');
 
   const sourceFile = project.createSourceFile(
     "Contract.ts",
@@ -220,6 +221,81 @@ export function getSourceFileV2(filePath: string) {
       namedImports,
       defaultImport
     };
+  });
+
+  // Parse interfaces (for struct definitions)
+  const interfacesJSON = sourceFile.getInterfaces().map((iface) => {
+    const properties = iface.getProperties().map((p) => ({
+      name: p.getName(),
+      type: p.getType().getText(),
+    }));
+
+    // Extract abilities from Has<> extends
+    let abilities: string[] = [];
+    const heritageClause = iface.getExtends();
+    if (heritageClause.length > 0) {
+      const extendsText = heritageClause[0].getText();
+      // Extract abilities from Has<"copy" | "key" | "store">
+      const hasMatch = extendsText.match(/Has<(.+)>/);
+      if (hasMatch) {
+        abilities = hasMatch[1]
+          .split('|')
+          .map(a => a.trim().replace(/"/g, '').replace(/'/g, ''));
+      }
+    }
+
+    return {
+      name: iface.getName(),
+      properties,
+      abilities,
+    };
+  });
+
+  // Parse imported struct files
+  const importedInterfaces: any[] = [];
+  imports.forEach((imp) => {
+    // Only parse local imports (starting with ./ or ../)
+    if (imp.moduleSpecifier.startsWith('./') || imp.moduleSpecifier.startsWith('../')) {
+      try {
+        const baseDir = path.dirname(filePath);
+        const importPath = path.resolve(baseDir, imp.moduleSpecifier + '.ts');
+
+        if (fs.existsSync(importPath)) {
+          const importedFile = project.createSourceFile(
+            path.basename(importPath),
+            fs.readFileSync(importPath, "utf-8")
+          );
+
+          // Parse interfaces from imported file
+          importedFile.getInterfaces().forEach((iface) => {
+            const properties = iface.getProperties().map((p) => ({
+              name: p.getName(),
+              type: p.getType().getText(),
+            }));
+
+            let abilities: string[] = [];
+            const heritageClause = iface.getExtends();
+            if (heritageClause.length > 0) {
+              const extendsText = heritageClause[0].getText();
+              const hasMatch = extendsText.match(/Has<(.+)>/);
+              if (hasMatch) {
+                abilities = hasMatch[1]
+                  .split('|')
+                  .map(a => a.trim().replace(/"/g, '').replace(/'/g, ''));
+              }
+            }
+
+            importedInterfaces.push({
+              name: iface.getName(),
+              properties,
+              abilities,
+            });
+          });
+        }
+      } catch (error) {
+        // Silently skip if file can't be read
+      }
+    }
   });
 
   const classesJSON = sourceFile.getClasses().map((cls) => ({
@@ -274,5 +350,8 @@ export function getSourceFileV2(filePath: string) {
     })),
   }));
 
-  return { classesJSON, constants, imports };
+  // Combine local and imported interfaces
+  const allInterfaces = [...interfacesJSON, ...importedInterfaces];
+
+  return { classesJSON, constants, imports, interfaces: allInterfaces };
 }

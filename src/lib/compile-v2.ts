@@ -3,21 +3,24 @@ import chalk from "chalk";
 import { filePathSchema } from "../schemas/file-path.schema";
 import { formatMoveCode, getSourceFileV2 } from "../utils";
 import { generateMoveImports } from "./v2/imports";
+import { generateMoveStructs } from "./v2/structs";
 
 export async function compileV2(filePath: string): Promise<void> {
   try {
     await filePathSchema.validate(filePath);
-    const { classesJSON, constants, imports } = getSourceFileV2(filePath);
+    const { classesJSON, constants, imports, interfaces } = getSourceFileV2(filePath);
 
     const moduleName = classesJSON[0].decorators[0].arguments[0]
       .replace(/'/g, "")
       .replace(/"/g, "");
     const packageName = classesJSON[0].name?.toLowerCase();
     const moveImports = generateMoveImports(imports);
+    const moveStructs = generateMoveStructs(interfaces);
 
     const contract = `
       module ${moduleName}::${packageName} {
         ${moveImports}
+        ${moveStructs}
       }
     `;
 
