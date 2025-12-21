@@ -25,5 +25,14 @@ export function generateMoveImports(
     moveImports.push("use std::string::String;");
   }
 
+  // Check if SuiEvent is imported (need sui::event)
+  const hasSuiEventImport = imports.some((imp) =>
+    imp.namedImports.includes("SuiEvent")
+  );
+
+  if (hasSuiEventImport) {
+    moveImports.push("use sui::event;");
+  }
+
   return moveImports.length > 0 ? moveImports.join("\n") + "\n" : "";
 }

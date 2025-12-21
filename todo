@@ -2,20 +2,24 @@ NFT TEST[X]
 WRITE TEST[X]
 BALANCE [X]
 EXEC TEST[X]
-VECTORS[]
+VECTORS[X]
 ASSERT[X]
 --
 struct[x]
 transfer[x]
 object[x]
 tx context[x]
-freeze[]
+freeze[x]
 owned[x]
 share[x]
-event[]
+event[x]
 public/private[x]
 example method[]
 --
+assertion[]
+balance[]
+nft[]
+vectors[]
 
 ?
 UNIFY

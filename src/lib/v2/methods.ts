@@ -30,6 +30,9 @@ function mapParameterType(tsType: string): string {
     u256: "u256",
     bool: "bool",
     address: "address",
+    string: "address",
+    UID: "sui::object::UID",
+    ID: "sui::object::ID",
     TxContext: "&mut sui::tx_context::TxContext",
   };
 
@@ -52,6 +55,12 @@ function transformMethodBody(body: string): string {
   transformed = transformed.replace(
     /SuiObject\.createObjectId\(([^)]+)\)/g,
     "sui::object::new($1)"
+  );
+
+  // Transform SuiObject.uidToInner(uid) -> sui::object::uid_to_inner(&uid)
+  transformed = transformed.replace(
+    /SuiObject\.uidToInner\(([^)]+)\)/g,
+    "sui::object::uid_to_inner(&$1)"
   );
 
   // Transform Transfer.shareObject<Type>(obj) -> sui::transfer::public_share_object(obj)
@@ -78,11 +87,24 @@ function transformMethodBody(body: string): string {
     "sui::tx_context::sender($1)"
   );
 
+  // Transform SuiEvent.emit<Type>(event) -> event::emit(Type event)
+  transformed = transformed.replace(
+    /SuiEvent\.emit<([^>]+)>\(\{/g,
+    "event::emit($1 {"
+  );
+
   // Transform let declarations with type annotation
   // Example: let newPerson: Person = { ... } -> let newPerson = Person { ... }
   transformed = transformed.replace(
     /let\s+(\w+):\s*(\w+)\s*=\s*\{/g,
     "let $1 = $2 {"
+  );
+
+  // Remove type annotations from simple let declarations
+  // Example: let person_id: UID = ... -> let person_id = ...
+  transformed = transformed.replace(
+    /let\s+(\w+):\s*\w+\s*=/g,
+    "let $1 ="
   );
 
   // Remove trailing commas in struct initialization

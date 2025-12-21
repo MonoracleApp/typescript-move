@@ -31,7 +31,9 @@ function mapTypeScriptToMove(tsType: string): string {
     'u256': 'u256',
     'bool': 'bool',
     'address': 'address',
+    'any': 'address',
     'UID': 'sui::object::UID',
+    'ID': 'sui::object::ID',
   };
 
   return typeMap[cleanType] || cleanType;
