@@ -3,11 +3,17 @@ interface MethodParameter {
   type: string;
 }
 
+interface MethodDecorator {
+  name: string;
+  arguments: string[];
+}
+
 interface MethodInfo {
   name: string | undefined;
   returnType: string;
   parameters: MethodParameter[];
   body: string | null;
+  decorators: MethodDecorator[];
 }
 
 /**
@@ -102,11 +108,15 @@ export function generateMoveFunctions(methods: MethodInfo[]): string {
       // Transform method body
       const body = transformMethodBody(method.body);
 
+      // Check if method has @Public decorator
+      const hasPublicDecorator = method.decorators?.some(d => d.name === 'Public') || false;
+      const visibility = hasPublicDecorator ? 'public ' : '';
+
       // Check if method uses Transfer.transfer (owned object)
       const usesTransfer = method.body.includes("Transfer.transfer");
       const attribute = usesTransfer ? "#[allow(lint(self_transfer))]\n  " : "";
 
-      return `${attribute}public entry fun ${method.name}(${params}) {
+      return `${attribute}${visibility}fun ${method.name}(${params}) {
     ${body}
   }`;
     })
