@@ -3,7 +3,7 @@ import chalk from "chalk";
 import { filePathSchema } from "../schemas/file-path.schema";
 import { formatMoveCode, getSourceFileV2 } from "../utils";
 import { generateMoveImports } from "./v2/imports";
-import { generateMoveStructs } from "./v2/structs";
+import { generateMoveStructs, validateStructAbilities } from "./v2/structs";
 
 export async function compileV2(filePath: string): Promise<void> {
   try {
@@ -14,8 +14,12 @@ export async function compileV2(filePath: string): Promise<void> {
       .replace(/'/g, "")
       .replace(/"/g, "");
     const packageName = classesJSON[0].name?.toLowerCase();
-    const moveImports = generateMoveImports(imports);
+
+    // Validate struct abilities before generating code
+    validateStructAbilities(interfaces);
+
     const moveStructs = generateMoveStructs(interfaces);
+    const moveImports = generateMoveImports(imports, interfaces);
 
     const contract = `
       module ${moduleName}::${packageName} {

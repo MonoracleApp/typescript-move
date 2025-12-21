@@ -1,3 +1,5 @@
+import chalk from 'chalk';
+
 interface StructProperty {
   name: string;
   type: string;
@@ -20,7 +22,7 @@ function mapTypeScriptToMove(tsType: string): string {
 
   // Direct mappings
   const typeMap: Record<string, string> = {
-    'String': 'String',
+    'String': 'string::String',
     'u64': 'u64',
     'u32': 'u32',
     'u8': 'u8',
@@ -32,6 +34,39 @@ function mapTypeScriptToMove(tsType: string): string {
   };
 
   return typeMap[cleanType] || cleanType;
+}
+
+/**
+ * Validates struct abilities and throws error if invalid combinations found
+ */
+export function validateStructAbilities(structs: StructInfo[]): void {
+  if (!structs || structs.length === 0) {
+    return;
+  }
+
+  const errors: string[] = [];
+
+  structs.forEach(struct => {
+    const hasCopyAbility = struct.abilities.includes('copy');
+    const hasKeyAbility = struct.abilities.includes('key');
+
+    if (hasCopyAbility && hasKeyAbility) {
+      errors.push(`Struct "${struct.name}" has both "copy" and "key" abilities.`);
+    }
+  });
+
+  if (errors.length > 0) {
+    console.log('\n' + chalk.red('='.repeat(60)));
+    console.log(chalk.red.bold('❌ Struct Validation Error:'));
+    console.log(chalk.red('='.repeat(60)));
+    errors.forEach(error => {
+      console.log(chalk.red(`  • ${error}`));
+    });
+    console.log(chalk.red('\nMove does not allow a struct to have both "copy" and "key" abilities.'));
+    console.log(chalk.red('Please remove one of these abilities from your struct definition.'));
+    console.log(chalk.red('='.repeat(60)) + '\n');
+    process.exit(1);
+  }
 }
 
 /**
@@ -51,7 +86,17 @@ export function generateMoveStructs(structs: StructInfo[]): string {
       : '';
 
     // Generate properties
-    const properties = struct.properties
+    let allProperties = [...struct.properties];
+
+    // If struct has "key" ability, add id: UID as the first property
+    if (struct.abilities.includes('key')) {
+      allProperties = [
+        { name: 'id', type: 'UID' },
+        ...struct.properties
+      ];
+    }
+
+    const properties = allProperties
       .map(prop => `    ${prop.name}: ${mapTypeScriptToMove(prop.type)}`)
       .join(',\n');
 
