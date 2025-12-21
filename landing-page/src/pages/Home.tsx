@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'ts' | 'move'>('ts');
@@ -26,6 +27,7 @@ export default function Home() {
 
   return (
     <>
+      <SEO title="SuiJS - TypeScript to Sui Move Transpiler" />
       {/* Mobile Menu Toggle */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

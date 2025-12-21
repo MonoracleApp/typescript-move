@@ -6,6 +6,7 @@ import { docsV1 } from '../data/docsV1';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import SEO from '../components/SEO';
 
 export default function Docs() {
   const { version = 'v2', category = 'getting-started', section = 'overview' } = useParams();
@@ -17,6 +18,11 @@ export default function Docs() {
 
   const currentCategory = docs.find(c => c.slug === category);
   const currentSection = currentCategory?.sections.find(s => s.id === section);
+
+  // Page title
+  const pageTitle = currentSection
+    ? `${currentSection.title} - SuiJS ${version.toUpperCase()} Docs`
+    : 'SuiJS Documentation';
 
   // Auto-expand current category
   useEffect(() => {
@@ -50,8 +56,10 @@ export default function Docs() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-64px)]">
-      {/* Mobile Sidebar Toggle */}
+    <>
+      <SEO title={pageTitle} />
+      <div className="flex min-h-[calc(100vh-64px)]">
+        {/* Mobile Sidebar Toggle */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className="lg:hidden fixed bottom-6 right-6 z-50 w-12 h-12 bg-white text-black rounded border-2 border-black flex items-center justify-center"
@@ -250,6 +258,7 @@ export default function Docs() {
           </div>
         )}
       </main>
-    </div>
+      </div>
+    </>
   );
 }
