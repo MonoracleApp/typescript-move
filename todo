@@ -5,11 +5,13 @@ EXEC TEST[X]
 VECTORS[]
 ASSERT[X]
 --
-struct[]
-transfer[]
-object[]
+struct[x]
+transfer[x]
+object[x]
+tx context[x]
 freeze[]
-share[]
+owned[x]
+share[x]
 event[]
 --
 

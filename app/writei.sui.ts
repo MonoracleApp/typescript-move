@@ -18,7 +18,7 @@ export class Writei {
       lastname,
       age,
     };
-    Transfer.shareObject<Person>(newPerson);
+    Transfer.transfer<Person>(newPerson, TxContext.sender(ctx));
   }
 
   createCounter(value: u64, ctx: TxContext) {

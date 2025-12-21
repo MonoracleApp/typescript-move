@@ -1,149 +1,72 @@
-# Demo App - CLI Tool Documentation
+# TypeScript to Sui Move Transpiler
 
-## About the Project
+  This is a CLI tool that transpiles TypeScript-like syntax into production-ready Sui Move smart contracts. It enables TypeScript developers to write Sui blockchain smart contracts using familiar syntax and patterns.
 
-This is a CLI (Command Line Interface) tool built with TypeScript. It provides users with various operations through the command line.
+  ## About the Project
 
-## Available Features
+  A powerful transpiler that converts `.sui.ts` files into optimized Sui Move code. The tool provides intelligent code generation, automatic type mapping, Move-compliant validation, and follows Sui Move best practices to ensure clean, warning-free output.
 
-### 1. Help Command
-Displays the application's usage information.
+  ## Key Features
 
-```bash
-demo-app --help
-demo-app -h
-```
+  ### 1. TypeScript-Like Contract Development
+  - Write smart contracts using TypeScript syntax
+  - Define structs as interfaces with `Has<>` ability annotations
+  - Use decorators (`@Module`) for module configuration
+  - Leverage TypeScript's type system during development
 
-### 2. Version Command
-Displays the application's version information.
+  ### 2. Intelligent Struct Generation
+  - **Interface to Struct**: Automatically converts TypeScript interfaces to Move structs
+  - **Ability Management**: `Has<"key" | "store">` becomes `has key, store`
+  - **Type Safety**: Validates ability combinations (prevents `copy + key` conflicts)
+  - **Smart Fields**: UID fields properly mapped to `sui::object::UID`
 
-```bash
-demo-app --version
-demo-app -v
-```
+  ### 3. Advanced Method Transpilation
+  - **Entry Functions**: Methods automatically become `public entry fun`
+  - **Parameter Mapping**:
+    - `TxContext` → `&mut sui::tx_context::TxContext`
+    - `String` → `String`
+    - Type-safe parameter conversion
+  - **Body Transformation**:
+    - `SuiObject.createObjectId(ctx)` → `sui::object::new(ctx)`
+    - `Transfer.shareObject<T>(obj)` → `sui::transfer::public_share_object(obj)`
+    - `let var: Type = { ... }` → `let var = Type { ... }`
 
-### 3. Compile Command
-Compiles `.sui.ts` files. Validates file path and only accepts files with `.sui.ts` extension.
+  ### 4. Optimized Import Management
+  - Minimal imports (no duplicate aliases)
+  - Full path usage to avoid Move compiler warnings
+  - Only imports what's actually used
+  - Follows Sui Move style guidelines
 
-```bash
-demo-app --compile <file-path>
-demo-app -c <file-path>
+  ### 5. Move Compliance & Validation
+  - **Ability Validation**: Prevents invalid ability combinations
+  - **Compile-time Errors**: Clear error messages with compilation halt
+  - **Warning-free Output**: Generates code that passes `sui move build` cleanly
+  - **Best Practices**: Follows official Sui Move conventions
 
-# Example
-demo-app --compile ./path/to/file.sui.ts
-```
+  ## Project Structure
 
-**Features:**
-- File path validation with Yup schema
-- Only accepts files with `.sui.ts` extension
-- Colorized error messages with Chalk
-
-### 4. Create Command
-Clones the template project from GitHub and displays installation instructions.
-
-```bash
-demo-app --create
-demo-app -cr
-```
-
-**What it does:**
-1. Clones the `https://github.com/Akifcan/eth-istanbul-hackathon` repository to the current directory
-2. After cloning, displays installation steps to the user:
-   - `cd eth-istanbul-hackathon`
-   - `npm install`
-   - `npm run dev`
-
-**Features:**
-- Requires no parameters
-- Uses a fixed GitHub repository URL
-- Displays automatic installation instructions after cloning
-- Executes git commands using `execSync`
-
-## Project Structure
-
-```
-demo-app/
-├── src/
-│   ├── lib/
-│   │   ├── show-help.ts      # Displays help message
-│   │   ├── show-version.ts   # Displays version information
-│   │   ├── compile.ts        # File compilation process
-│   │   └── create.ts         # GitHub repository cloning
-│   ├── schemas/
-│   │   ├── file-path.schema.ts  # .sui.ts file path validation
-│   │   └── slug.schema.ts       # Slug format validation (not in use)
-│   └── index.ts              # Main CLI entry point
-├── bin/
-│   └── cli.js                # CLI executable
-├── dist/                     # Compiled TypeScript files
-├── package.json
-└── tsconfig.json
-```
-
-## Technologies
-
-- **TypeScript**: Type-safe code writing
-- **Yup**: Schema validation
-- **Chalk**: Terminal colorization
-- **Node.js**: Runtime environment
-- **child_process.execSync**: Execute git commands
-
-## Development
-
-### Adding a New Command
-
-1. Create a new file under `src/lib/` (e.g., `my-command.ts`)
-2. Export the command:
-   ```typescript
-   export async function myCommand(): Promise<void> {
-     // Command logic
-   }
-   ```
-3. Import it in `src/index.ts` and add to the switch case:
-   ```typescript
-   import { myCommand } from "./lib/my-command";
-
-   // In the switch block
-   case '--my-command':
-   case '-mc':
-     await myCommand();
-     break;
-   ```
-
-### Adding a New Schema
-
-1. Create a new schema file under `src/schemas/`
-2. Define validation rules using Yup:
-   ```typescript
-   import * as yup from 'yup';
-
-   export const mySchema = yup.string()
-     .required('Field is required')
-     .test('custom-rule', 'Error message', (value) => {
-       // Validation logic
-       return true;
-     });
-   ```
-
-## Build & Run
-
-```bash
-# Build during development
-npm run build
-
-# Run in watch mode
-npm run watch
-
-# Clean build files
-npm run clean
-
-# Test the command
-node bin/cli.js --create
-```
-
-## Future Features
-
-- [ ] Real compilation logic for `.sui.ts` files
-- [ ] More template repository options
-- [ ] Interactive CLI mode
-- [ ] Configuration file support
+  ts-sui-transpiler/
+  ├── src/
+  │   ├── lib/
+  │   │   ├── compile-v2.ts           # Main V2 compilation orchestration
+  │   │   └── v2/
+  │   │       ├── structs.ts          # Struct generation & validation
+  │   │       ├── methods.ts          # Method/function generation
+  │   │       ├── imports.ts          # Import optimization
+  │   │       ├── types.ts            # Type definitions (String, u64, UID)
+  │   │       ├── abilities.ts        # Has<> type helper
+  │   │       ├── sui-object.ts       # SuiObject helper class
+  │   │       ├── tx-context.ts       # TxContext type
+  │   │       └── transfer.ts         # Transfer helper class
+  │   ├── utils/
+  │   │   └── index.ts               # AST parsing with ts-morph
+  │   ├── schemas/
+  │   │   └── file-path.schema.ts    # File validation
+  │   └── index.ts                   # CLI entry point
+  ├── app/
+  │   ├── *.sui.ts                   # Example contracts
+  │   └── structs/                   # Struct definitions (interfaces)
+  │       ├── person.struct.ts
+  │       └── counter.struct.ts
+  └── bin/
+      └── cli.js                     # CLI executable

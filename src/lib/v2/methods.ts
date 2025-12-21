@@ -54,6 +54,18 @@ function transformMethodBody(body: string): string {
     "sui::transfer::public_share_object($1)"
   );
 
+  // Transform Transfer.transfer<Type>(obj, recipient) -> sui::transfer::transfer(obj, recipient)
+  transformed = transformed.replace(
+    /Transfer\.transfer<[^>]+>\(([^)]+)\)/g,
+    "sui::transfer::transfer($1)"
+  );
+
+  // Transform TxContext.sender(ctx) -> sui::tx_context::sender(ctx)
+  transformed = transformed.replace(
+    /TxContext\.sender\(([^)]+)\)/g,
+    "sui::tx_context::sender($1)"
+  );
+
   // Transform let declarations with type annotation
   // Example: let newPerson: Person = { ... } -> let newPerson = Person { ... }
   transformed = transformed.replace(
@@ -90,7 +102,11 @@ export function generateMoveFunctions(methods: MethodInfo[]): string {
       // Transform method body
       const body = transformMethodBody(method.body);
 
-      return `public fun ${method.name}(${params}) {
+      // Check if method uses Transfer.transfer (owned object)
+      const usesTransfer = method.body.includes("Transfer.transfer");
+      const attribute = usesTransfer ? "#[allow(lint(self_transfer))]\n  " : "";
+
+      return `${attribute}public entry fun ${method.name}(${params}) {
     ${body}
   }`;
     })
