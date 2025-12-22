@@ -19,7 +19,7 @@ export default function Layout() {
                 <span className="text-sm">~/suijs</span>
               </div>
             </Link>
-            <nav className="flex items-center gap-6 text-sm">
+            <nav className="flex flex-wrap items-center gap-6 text-sm">
               <Link
                 to="/docs/v2/getting-started/overview"
                 className={`transition-colors ${location.pathname.startsWith('/docs')
@@ -29,14 +29,14 @@ export default function Layout() {
               >
                 [docs]
               </Link>
-              <a
+              {/* <a
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[#888] hover:text-white transition-colors flex items-center gap-1"
               >
                 [github]
-              </a>
+              </a> */}
             </nav>
           </div>
         </div>

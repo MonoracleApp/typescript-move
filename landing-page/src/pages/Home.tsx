@@ -126,7 +126,7 @@ export default function Home() {
                   <span className="animate-pulse">▊</span>
                 </div>
               </div>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              <h1 className="text-2xl md:text-5xl md:text-7xl font-bold mb-6 leading-tight">
                 TYPESCRIPT {'>'} SUI MOVE
               </h1>
               <p className="text-xl text-[#888] mb-8 max-w-2xl border-l-2 border-[#333] pl-4">
@@ -150,11 +150,11 @@ export default function Home() {
       </section>
 
       {/* Code Block */}
-      <section className="border-b border-[#333]">
+      <section className="border-b border-[#333] overflow-x-hidden">
         <div className="max-w-[1400px] mx-auto px-6 py-20">
-          <div className="border-2 border-white">
+          <div className="border-2 border-white overflow-hidden">
             {/* Tabs */}
-            <div className="flex border-b-2 border-white">
+            <div className="flex flex-col md:flex-row border-b-2 border-white">
               <button
                 onClick={() => setActiveTab('ts')}
                 className={`flex-1 px-6 py-3 font-bold transition-colors ${activeTab === 'ts'
@@ -176,10 +176,10 @@ export default function Home() {
             </div>
 
             {/* Code Content */}
-            <div className="p-6 bg-black min-h-[400px]">
+            <div className="p-6 bg-black min-h-[400px] overflow-x-auto">
               {activeTab === 'ts' ? (
-                <pre className="text-sm leading-relaxed">
-                  <code className="text-[#00ff00]">
+                <pre className="text-sm leading-relaxed overflow-x-auto">
+                  <code className="text-[#00ff00] block">
                     {`@Module('hello_world')
 class MyContract {
 
@@ -212,8 +212,8 @@ class MyContract {
                   </code>
                 </pre>
               ) : (
-                <pre className="text-sm leading-relaxed">
-                  <code className="text-[#00ff00]">
+                <pre className="text-sm leading-relaxed overflow-x-auto">
+                  <code className="text-[#00ff00] block">
                     {`module hello_world::mycontract {
   use std::string::String;
 
@@ -362,7 +362,7 @@ class MyContract {
         <div className="max-w-[1400px] mx-auto px-6 py-20">
           <div className="border-4 border-white p-12 text-center">
             <BookOpen className="w-16 h-16 mx-auto mb-6" />
-            <h2 className="text-4xl font-bold mb-6">
+            <h2 className="text-base md:text-4xl font-bold mb-6">
               [DOCUMENTATION]
             </h2>
             <p className="text-xl text-[#888] mb-8 max-w-2xl mx-auto">
