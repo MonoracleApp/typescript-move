@@ -1,4 +1,4 @@
-import { Module, Public } from "../src/decorators";
+import { Package, Public } from "../src/decorators";
 import { String, u64, UID, ID } from "../src/lib/v2/types";
 import { Transfer } from "../src/lib/v2/transfer";
 import { Person } from "./structs/person.struct";
@@ -9,7 +9,7 @@ import { Winner } from "./structs/winner.struct";
 import { SuiEvent } from "../src/lib/v2/event";
 import { PersonCreatedEvent } from "./events/person-created.event";
 
-@Module("version2")
+@Package("version2")
 export class Writei {
   person?: Person;
   counter?: Counter;

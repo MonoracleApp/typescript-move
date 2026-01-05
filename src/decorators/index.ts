@@ -29,6 +29,13 @@ function Module(struct: string) {
   };
 }
 
+function Package(struct: string) {
+  return function (target: any) {
+    Reflect.defineMetadata("module:package", { struct }, target);
+    return target;
+  };
+}
+
 function Write(struct: string) {
   return function (target: any) {
     Reflect.defineMetadata("module:write", { struct }, target);
@@ -90,4 +97,5 @@ export {
   Assert,
   Move,
   Public,
+  Package
 };
