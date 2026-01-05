@@ -32,8 +32,8 @@ function mapTypeScriptToMove(tsType: string): string {
     'bool': 'bool',
     'address': 'address',
     'any': 'address',
-    'UID': 'sui::object::UID',
-    'ID': 'sui::object::ID',
+    'UID': 'object::UID',
+    'ID': 'object::ID',
   };
 
   return typeMap[cleanType] || cleanType;

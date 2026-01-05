@@ -31,9 +31,9 @@ function mapParameterType(tsType: string, isPublicFunction: boolean = false): st
     bool: "bool",
     address: "address",
     string: "address",
-    UID: "sui::object::UID",
-    ID: "sui::object::ID",
-    TxContext: "&mut sui::tx_context::TxContext",
+    UID: "UID",
+    ID: "ID",
+    TxContext: "&mut tx_context::TxContext",
   };
 
   // Remove import() wrapper
@@ -159,40 +159,40 @@ function transformMethodBody(body: string, hasPublicDecorator: boolean = false, 
     }
   }
 
-  // Transform SuiObject.createObjectId(ctx) -> sui::object::new(ctx)
+  // Transform SuiObject.createObjectId(ctx) -> object::new(ctx)
   transformed = transformed.replace(
     /SuiObject\.createObjectId\(([^)]+)\)/g,
-    "sui::object::new($1)"
+    "object::new($1)"
   );
 
-  // Transform SuiObject.uidToInner(uid) -> sui::object::uid_to_inner(&uid)
+  // Transform SuiObject.uidToInner(uid) -> object::uid_to_inner(&uid)
   transformed = transformed.replace(
     /SuiObject\.uidToInner\(([^)]+)\)/g,
-    "sui::object::uid_to_inner(&$1)"
+    "object::uid_to_inner(&$1)"
   );
 
-  // Transform Transfer.shareObject<Type>(obj) -> sui::transfer::public_share_object(obj)
+  // Transform Transfer.shareObject<Type>(obj) -> transfer::public_share_object(obj)
   transformed = transformed.replace(
     /Transfer\.shareObject<[^>]+>\(([^)]+)\)/g,
-    "sui::transfer::public_share_object($1)"
+    "transfer::public_share_object($1)"
   );
 
-  // Transform Transfer.transfer<Type>(obj, recipient) -> sui::transfer::transfer(obj, recipient)
+  // Transform Transfer.transfer<Type>(obj, recipient) -> transfer::transfer(obj, recipient)
   transformed = transformed.replace(
     /Transfer\.transfer<[^>]+>\(([^)]+)\)/g,
-    "sui::transfer::transfer($1)"
+    "transfer::transfer($1)"
   );
 
-  // Transform Transfer.freezeObject<Type>(obj) -> sui::transfer::public_freeze_object(obj)
+  // Transform Transfer.freezeObject<Type>(obj) -> transfer::public_freeze_object(obj)
   transformed = transformed.replace(
     /Transfer\.freezeObject<[^>]+>\(([^)]+)\)/g,
-    "sui::transfer::public_freeze_object($1)"
+    "transfer::public_freeze_object($1)"
   );
 
-  // Transform TxContext.sender(ctx) -> sui::tx_context::sender(ctx)
+  // Transform TxContext.sender(ctx) -> tx_context::sender(ctx)
   transformed = transformed.replace(
     /TxContext\.sender\(([^)]+)\)/g,
-    "sui::tx_context::sender($1)"
+    "tx_context::sender($1)"
   );
 
   // Transform SuiEvent.emit<Type>(event) -> event::emit(Type event)

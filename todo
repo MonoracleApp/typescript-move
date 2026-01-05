@@ -16,10 +16,10 @@ event[x]
 public/private[x]
 example method[x]
 --
-assertion[]
-balance[]
-nft[]
-vectors[]
+assertion[x]
+balance[x]
+nft[x]
+vectors[x]
 
 ?
 UNIFY
@@ -34,3 +34,11 @@ Epoch time stamp
 public ve düz olmak üzere
 shareobject
 freeze object
+
+
+-> module yerine package[]
+-> kendi modüllerimzi import edebilelim[]
+-> public package decorator[]
+-> transfer public için freeze, share, transfer[]
+-> sui prefixlerini kaldırıcaz[]
+-> https://move-book.com/move-basics/visibility/[]
