@@ -62,4 +62,12 @@ export class Writei {
       lastname,
     };
   }
+
+  @Public('package')
+  getUserLastname(person: Person) {
+    const lastname = person.lastname;
+    return {
+      lastname,
+    };
+  }
 }

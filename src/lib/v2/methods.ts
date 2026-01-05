@@ -237,7 +237,8 @@ export function generateMoveFunctions(methods: MethodInfo[]): string {
       if (!method.name || !method.body) return "";
 
       // Check if method has @Public decorator
-      const hasPublicDecorator = method.decorators?.some(d => d.name === 'Public') || false;
+      const publicDecorator = method.decorators?.find(d => d.name === 'Public');
+      const hasPublicDecorator = !!publicDecorator;
 
       // Check if function has a return statement (getter/view function)
       const isGetter = method.body.includes('return {');
@@ -270,7 +271,18 @@ export function generateMoveFunctions(methods: MethodInfo[]): string {
         }
       }
 
-      const visibility = hasPublicDecorator ? 'public ' : '';
+      // Extract visibility type from @Public decorator argument
+      let visibility = '';
+      if (hasPublicDecorator) {
+        const visibilityArg = publicDecorator?.arguments?.[0];
+        if (visibilityArg) {
+          // Remove quotes from the argument (e.g., 'package' or "package")
+          const cleanArg = visibilityArg.replace(/^['"]|['"]$/g, '');
+          visibility = `public(${cleanArg}) `;
+        } else {
+          visibility = 'public ';
+        }
+      }
 
       // Check if method uses Transfer.transfer (owned object)
       const usesTransfer = method.body.includes("Transfer.transfer");

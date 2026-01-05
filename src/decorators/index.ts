@@ -43,9 +43,9 @@ function Write(struct: string) {
   };
 }
 
-function Public() {
+function Public(type?: undefined | 'package') {
   return function (target: any) {
-    Reflect.defineMetadata("module:public", {}, target);
+    Reflect.defineMetadata("module:public", { type }, target);
     return target;
   };
 }

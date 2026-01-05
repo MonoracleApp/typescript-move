@@ -36,9 +36,10 @@ shareobject
 freeze object
 
 
--> module yerine package[]
--> kendi modüllerimzi import edebilelim[]
--> public package decorator[]
--> transfer public için freeze, share, transfer[]
+-> module yerine package[x]
+-> transfer public için freeze, share, transfer[x]
 -> sui prefixlerini kaldırıcaz[x]
 -> https://move-book.com/move-basics/visibility/[]
+----
+-> kendi modüllerimzi import edebilelim[]
+-> public package decorator[]
