@@ -35,3 +35,13 @@ coverage/
 .DS_Store
 *.tmp
 node_modules/
+
+# Example projects and documentation
+sui-stack-hello-world/
+landing-page/
+example/
+todo
+DOC.md
+DOC_V2.md
+CLAUDE.md
+.claude/

@@ -21,8 +21,8 @@ export default function Docs() {
 
   // Page title
   const pageTitle = currentSection
-    ? `${currentSection.title} - SuiJS ${version.toUpperCase()} Docs`
-    : 'SuiJS Documentation';
+    ? `${currentSection.title} - move-ts ${version.toUpperCase()} Docs`
+    : 'move-ts Documentation';
 
   // Auto-expand current category
   useEffect(() => {

@@ -16,7 +16,7 @@ export default function Layout() {
               <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
               <div className="ml-4 flex items-center gap-2">
                 <Terminal className="w-4 h-4 text-[#00ff00]" />
-                <span className="text-sm">~/suijs</span>
+                <span className="text-sm">~/move-ts</span>
               </div>
             </Link>
             <nav className="flex flex-wrap items-center gap-6 text-sm">
@@ -53,7 +53,7 @@ export default function Layout() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
             <div className="flex items-center gap-2">
               <Terminal className="w-4 h-4 text-[#00ff00]" />
-              <span>SUIJS_v2.0</span>
+              <span>MOVE-TS_v1.0</span>
             </div>
             <div className="text-[#888]">
               TypeScript {'→'} Sui Move Transpiler

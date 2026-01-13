@@ -1,8 +1,8 @@
-# TypeScript to Sui Move Transpiler - V2 Documentation
+# move-ts - V2 Documentation
 
 ## Overview
 
-The V2 transpiler converts TypeScript-like syntax into production-ready Sui Move smart contracts. It provides intelligent type mapping, automatic code generation, and follows Sui Move best practices.
+move-ts is a TypeScript to Sui Move transpiler that converts TypeScript-like syntax into production-ready Sui Move smart contracts. It provides intelligent type mapping, automatic code generation, and follows Sui Move best practices.
 
 ## Table of Contents
 
@@ -39,8 +39,8 @@ Structs are defined as TypeScript interfaces with the `Has<>` ability annotation
 ### Syntax
 
 ```typescript
-import { Has } from "../../src/lib/v2/abilities";
-import { String, u64, UID } from "../../src/lib/v2/types";
+import { Has } from "move-ts/lib/v2/abilities";
+import { String, u64, UID } from "move-ts/lib/v2/types";
 
 export interface StructName extends Has<"ability1" | "ability2"> {
   id: UID;
@@ -62,8 +62,8 @@ export interface StructName extends Has<"ability1" | "ability2"> {
 
 **TypeScript:**
 ```typescript
-import { Has } from "../../src/lib/v2/abilities";
-import { u64, String, UID } from "../../src/lib/v2/types";
+import { Has } from "move-ts/lib/v2/abilities";
+import { u64, String, UID } from "move-ts/lib/v2/types";
 
 export interface Person extends Has<"key" | "store"> {
   id: UID;
@@ -110,8 +110,8 @@ Events use `copy` and `drop` abilities and are emitted using `SuiEvent.emit<>()`
 ### Syntax
 
 ```typescript
-import { Has } from "../../src/lib/v2/abilities";
-import { String, u64, ID } from "../../src/lib/v2/types";
+import { Has } from "move-ts/lib/v2/abilities";
+import { String, u64, ID } from "move-ts/lib/v2/types";
 
 export interface EventName extends Has<"copy" | "drop"> {
   field1: Type1;
@@ -123,8 +123,8 @@ export interface EventName extends Has<"copy" | "drop"> {
 
 **TypeScript:**
 ```typescript
-import { Has } from "../../src/lib/v2/abilities";
-import { String, u64, ID } from "../../src/lib/v2/types";
+import { Has } from "move-ts/lib/v2/abilities";
+import { String, u64, ID } from "move-ts/lib/v2/types";
 
 export interface PersonCreatedEvent extends Has<"copy" | "drop"> {
   person_id: ID;
@@ -155,7 +155,7 @@ Use the `@Module()` decorator to define your contract module.
 ### Syntax
 
 ```typescript
-import { Module } from "../src/decorators";
+import { Module } from "move-ts/decorators";
 
 @Module("module_name")
 export class ContractClassName {
@@ -397,16 +397,22 @@ getUser(person: Person) {
 
 ## Compilation
 
-### Build the Transpiler
+### Install move-ts
 
 ```bash
-npm run build
+npm install -g move-ts
 ```
 
 ### Compile a Contract
 
 ```bash
-node bin/cli.js --compileV2 app/writei.sui.ts
+move-ts --compileV2 app/writei.sui.ts
+```
+
+Or using npx:
+
+```bash
+npx move-ts --compileV2 app/writei.sui.ts
 ```
 
 ### Output

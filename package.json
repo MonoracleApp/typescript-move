@@ -1,11 +1,11 @@
 {
-  "name": "demo-app",
+  "name": "move-ts",
   "version": "1.0.0",
-  "description": "A CLI tool built with TypeScript",
+  "description": "TypeScript to Sui Move transpiler - Write Sui smart contracts using TypeScript syntax",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "demo-app": "./bin/cli.js"
+    "move-ts": "./bin/cli.js"
   },
   "scripts": {
     "build": "tsc",
@@ -21,9 +21,14 @@
     "LICENSE"
   ],
   "keywords": [
-    "cli",
+    "sui",
+    "move",
+    "blockchain",
+    "transpiler",
     "typescript",
-    "tool"
+    "smart-contracts",
+    "sui-move",
+    "web3"
   ],
   "author": "",
   "license": "MIT",
@@ -36,12 +41,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/demo-app.git"
+    "url": "https://github.com/yourusername/move-ts.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/demo-app/issues"
+    "url": "https://github.com/yourusername/move-ts/issues"
   },
-  "homepage": "https://github.com/yourusername/demo-app#readme",
+  "homepage": "https://github.com/yourusername/move-ts#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "reflect-metadata": "^0.2.2",
