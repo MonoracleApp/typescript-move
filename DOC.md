@@ -1,6 +1,6 @@
-# move-ts Documentation
+# typescript-move Documentation
 
-Complete guide to move-ts decorators and types.
+Complete guide to typescript-move decorators and types.
 
 ## Table of Contents
 
@@ -334,8 +334,8 @@ PersonList: SuiVector = {
 ### Simple Object Creation
 
 ```typescript
-import { Has, Module, Write } from "move-ts/decorators";
-import { sui } from "move-ts/types";
+import { Has, Module, Write } from "typescript-move/decorators";
+import { sui } from "typescript-move/types";
 
 @Module('hello_world')
 class Writing {
@@ -356,9 +356,9 @@ export default Writing
 ### Balance Management with Assertions
 
 ```typescript
-import { Assert, Balance, Module } from "move-ts/decorators";
-import { Assertion } from "move-ts/lib/assertion";
-import { BalanceFor } from "move-ts/types";
+import { Assert, Balance, Module } from "typescript-move/decorators";
+import { Assertion } from "typescript-move/lib/assertion";
+import { BalanceFor } from "typescript-move/types";
 
 @Module('hello_world')
 class Balancing {
@@ -376,8 +376,8 @@ export default Balancing
 ### NFT Minting
 
 ```typescript
-import { Has, Mint, Module, Transfer } from "move-ts/decorators";
-import { sui } from "move-ts/types";
+import { Has, Mint, Module, Transfer } from "typescript-move/decorators";
+import { sui } from "typescript-move/types";
 
 @Module('hello_world')
 class Nfting {

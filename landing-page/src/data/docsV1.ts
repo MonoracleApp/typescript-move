@@ -8,9 +8,9 @@ export const docsV1: DocCategory[] = [
       {
         id: "overview",
         title: "Overview",
-        content: `# move-ts Decorator API
+        content: `# typescript-move Decorator API
 
-Complete guide to move-ts decorators and types. This is the decorator-based API for writing Sui Move contracts.
+Complete guide to typescript-move decorators and types. This is the decorator-based API for writing Sui Move contracts.
 
 ## What is the Decorator API?
 
@@ -395,7 +395,7 @@ PersonList: SuiVector = {
 ## Usage
 
 \`\`\`typescript
-import { sui } from "move-ts/types";
+import { sui } from "typescript-move/types";
 
 @Has(['key', 'store'])
 User = {
@@ -506,8 +506,8 @@ changeName(user: Mut<'User'>, newName: Primitive<'string::String'>) {
         content: `# Simple Object Creation
 
 \`\`\`typescript
-import { Has, Module, Write } from "move-ts/decorators";
-import { sui } from "move-ts/types";
+import { Has, Module, Write } from "typescript-move/decorators";
+import { sui } from "typescript-move/types";
 
 @Module('hello_world')
 class Writing {
@@ -531,9 +531,9 @@ export default Writing
         content: `# Balance Management with Assertions
 
 \`\`\`typescript
-import { Assert, Balance, Module } from "move-ts/decorators";
-import { Assertion } from "move-ts/lib/assertion";
-import { BalanceFor } from "move-ts/types";
+import { Assert, Balance, Module } from "typescript-move/decorators";
+import { Assertion } from "typescript-move/lib/assertion";
+import { BalanceFor } from "typescript-move/types";
 
 @Module('hello_world')
 class Balancing {
@@ -555,7 +555,7 @@ export default Balancing
 
 \`\`\`typescript
 import { Has, Mint, Module, Transfer } from "./decorators";
-import { sui } from "move-ts/types";
+import { sui } from "typescript-move/types";
 
 @Module('hello_world')
 class Nfting {

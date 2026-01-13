@@ -21,8 +21,8 @@ export default function Docs() {
 
   // Page title
   const pageTitle = currentSection
-    ? `${currentSection.title} - move-ts ${version.toUpperCase()} Docs`
-    : 'move-ts Documentation';
+    ? `${currentSection.title} - typescript-move ${version.toUpperCase()} Docs`
+    : 'typescript-move Documentation';
 
   // Auto-expand current category
   useEffect(() => {

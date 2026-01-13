@@ -1,11 +1,11 @@
 {
-  "name": "move-ts",
-  "version": "1.0.0",
+  "name": "typescript-move",
+  "version": "1.0.1",
   "description": "TypeScript to Sui Move transpiler - Write Sui smart contracts using TypeScript syntax",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "move-ts": "./bin/cli.js"
+    "typescript-move": "./bin/cli.js"
   },
   "scripts": {
     "build": "tsc",

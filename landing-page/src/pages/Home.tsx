@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <>
-      <SEO title="move-ts - TypeScript to Sui Move Transpiler" />
+      <SEO title="typescript-move - TypeScript to Sui Move Transpiler" />
       {/* Mobile Menu Toggle */}
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -101,7 +101,7 @@ export default function Home() {
                 {/* Version Info */}
                 <div className="mt-8 pt-8 border-t-2 border-[#333]">
                   <div className="flex items-center justify-between text-xs text-[#888]">
-                    <span>MOVE-TS_v1.0</span>
+                    <span>TYPESCRIPT-MOVE_v1.0</span>
                     <span>MIT_LICENSE</span>
                   </div>
                 </div>
@@ -328,7 +328,7 @@ class MyContract {
                 <span>Install</span>
               </div>
               <code className="text-[#00ff00] text-sm">
-                $ npm install -g move-ts
+                $ npm install -g typescript-move
               </code>
             </div>
 
@@ -339,7 +339,7 @@ class MyContract {
                 <span>Compile</span>
               </div>
               <code className="text-[#00ff00] text-sm">
-                $ move-ts --compileV2 contract.sui.ts
+                $ typescript-move --compileV2 contract.sui.ts
               </code>
             </div>
 

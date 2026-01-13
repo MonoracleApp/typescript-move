@@ -18,9 +18,9 @@ export const docsV2: DocCategory[] = [
       {
         id: "overview",
         title: "Overview",
-        content: `# move-ts - V2 API
+        content: `# typescript-move - V2 API
 
-move-ts is a TypeScript to Sui Move transpiler that converts TypeScript-like syntax into production-ready Sui Move smart contracts. It provides intelligent type mapping, automatic code generation, and follows Sui Move best practices.
+typescript-move is a TypeScript to Sui Move transpiler that converts TypeScript-like syntax into production-ready Sui Move smart contracts. It provides intelligent type mapping, automatic code generation, and follows Sui Move best practices.
 
 ## Key Features
 
@@ -43,13 +43,13 @@ move-ts is a TypeScript to Sui Move transpiler that converts TypeScript-like syn
 ## Install
 
 \`\`\`bash
-npm install -g move-ts
+npm install -g typescript-move
 \`\`\`
 
 ## Verify Installation
 
 \`\`\`bash
-move-ts --version
+typescript-move --version
 \`\`\`
 
 ## Quick Start
@@ -59,7 +59,7 @@ move-ts --version
 touch contract.sui.ts
 
 # Compile to Move
-move-ts --compileV2 contract.sui.ts
+typescript-move --compileV2 contract.sui.ts
 \`\`\``
       }
     ]
@@ -78,8 +78,8 @@ Structs are defined as TypeScript interfaces with the \`Has<>\` ability annotati
 ## Syntax
 
 \`\`\`typescript
-import { Has } from "move-ts/lib/v2/abilities";
-import { String, u64, UID } from "move-ts/lib/v2/types";
+import { Has } from "typescript-move/lib/v2/abilities";
+import { String, u64, UID } from "typescript-move/lib/v2/types";
 
 export interface StructName extends Has<"ability1" | "ability2"> {
   id: UID;
@@ -92,8 +92,8 @@ export interface StructName extends Has<"ability1" | "ability2"> {
 
 **TypeScript:**
 \`\`\`typescript
-import { Has } from "move-ts/lib/v2/abilities";
-import { u64, String, UID } from "move-ts/lib/v2/types";
+import { Has } from "typescript-move/lib/v2/abilities";
+import { u64, String, UID } from "typescript-move/lib/v2/types";
 
 export interface Person extends Has<"key" | "store"> {
   id: UID;
@@ -373,7 +373,7 @@ SuiEvent.emit<PersonCreatedEvent>({
 ## Usage
 
 \`\`\`typescript
-import { String, u64, UID } from "move-ts/lib/v2/types";
+import { String, u64, UID } from "typescript-move/lib/v2/types";
 
 interface Person {
   id: UID;
