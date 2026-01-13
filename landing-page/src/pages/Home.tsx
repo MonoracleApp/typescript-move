@@ -136,12 +136,10 @@ export default function Home() {
                 </div>
               </div>
               <h1 className="text-2xl md:text-5xl md:text-7xl font-bold mb-6 leading-tight">
-                TYPESCRIPT {'>'} SUI MOVE
+                TYPESCRIPT {'>'}  MOVE
               </h1>
               <p className="text-xl text-[#888] mb-8 max-w-2xl border-l-2 border-[#333] pl-4">
-                // Transpile TypeScript syntax to production-ready Sui Move contracts
-                <br />
-                // No Move experience required. Ship faster.
+                // This project brings the Move ecosystem to a wider audience by enabling developers to build on Sui with TypeScript, making adoption faster and more natural.
               </p>
             </div>
 
