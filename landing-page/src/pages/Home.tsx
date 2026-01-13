@@ -15,7 +15,9 @@ import {
   ChevronRight,
   Box,
   Menu,
-  X
+  X,
+  Copy,
+  Check
 } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -24,6 +26,13 @@ import SEO from '../components/SEO';
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'ts' | 'move'>('ts');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const copyToClipboard = (text: string, id: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedCode(id);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
 
   return (
     <>
@@ -162,7 +171,7 @@ export default function Home() {
                   : 'bg-black text-white hover:bg-[#1a1a1a]'
                   }`}
               >
-                HelloWorld.sui.ts
+                contract.sui.ts
               </button>
               <button
                 onClick={() => setActiveTab('move')}
@@ -171,42 +180,192 @@ export default function Home() {
                   : 'bg-black text-white hover:bg-[#1a1a1a]'
                   }`}
               >
-                hello-world.MOVE
+                contract.MOVE
               </button>
             </div>
 
             {/* Code Content */}
-            <div className="p-6 bg-black min-h-[400px] overflow-x-auto">
-              {activeTab === 'ts' ? (
-                <pre className="text-sm leading-relaxed overflow-x-auto">
-                  <code className="text-[#00ff00] block">
-                    {`@Module('hello_world')
-class MyContract {
+            <div className="relative p-6 bg-black min-h-[400px] overflow-x-auto">
+              <button
+                onClick={() => copyToClipboard(
+                  activeTab === 'ts'
+                    ? `import {
+  Has,
+  Package,
+  Public,
+  SuiEvent,
+  SuiObject,
+  TxContext,
+  u64,
+  UID,
+  String,
+  Transfer,
+  ID,
+} from "typescript-move";
 
+interface Person extends Has<"key" | "store"> {
+  id: UID;
+  name: String;
+  lastname: String;
+  age: u64;
+}
+
+interface PersonCreatedEvent extends Has<"copy" | "drop"> {
+  person_id: ID;
+  name: String;
+  lastname: String;
+  age: u64;
+  owner: any;
+}
+
+@Package("version2")
+export class Writei {
   @Public()
-  createPerson(
-    name: String,
-    age: u64,
-    ctx: TxContext
-  ) {
-    let person = {
-      id: SuiObject.createObjectId(ctx),
+  createPerson(name: String, lastname: String, age: u64, ctx: TxContext) {
+    let person_id: UID = SuiObject.createObjectId(ctx);
+    let sender: string = TxContext.sender(ctx);
+
+    SuiEvent.emit<PersonCreatedEvent>({
+      person_id: SuiObject.uidToInner(person_id),
       name,
-      age
+      lastname,
+      age,
+      owner: sender,
+    });
+
+    let newPerson: Person = {
+      id: person_id,
+      name,
+      lastname,
+      age,
     };
 
-    Transfer.transfer<Person>(
-      person,
-      TxContext.sender(ctx)
-    );
+    Transfer.transfer<Person>(newPerson, sender);
   }
 
   @Public()
   getUser(person: Person) {
-    return {
-      name: person.name,
-      age: person.age
+    const name = person.name;
+    const lastname = person.lastname;
+    return { name, lastname };
+  }
+}`
+                    : `module version2::writei {
+  use std::string::String;
+  use sui::event;
+
+  public struct Person has key, store {
+    id: object::UID,
+    name: String,
+    lastname: String,
+    age: u64
+  }
+
+  public struct PersonCreatedEvent has copy, drop {
+    person_id: object::ID,
+    name: String,
+    lastname: String,
+    age: u64,
+    owner: address
+  }
+
+  #[allow(lint(self_transfer))]
+  public fun createPerson(name: String, lastname: String, age: u64, ctx: &mut tx_context::TxContext) {
+    let person_id = object::new(ctx);
+    let sender = tx_context::sender(ctx);
+    event::emit(PersonCreatedEvent {
+      person_id: object::uid_to_inner(&person_id),
+      name,
+      lastname,
+      age,
+      owner: sender
+    });
+    let newPerson = Person { id: person_id, name, lastname, age };
+    transfer::transfer(newPerson, sender);
+  }
+
+  public fun getUser(p: &Person): (String, String) {
+    (p.name, p.lastname)
+  }
+}`,
+                  'main-code'
+                )}
+                className="absolute top-4 right-4 px-3 py-2 bg-white text-black hover:bg-[#ddd] transition-colors font-bold text-xs flex items-center gap-2"
+              >
+                {copiedCode === 'main-code' ? (
+                  <>
+                    <Check className="w-3 h-3" />
+                    COPIED
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3" />
+                    COPY
+                  </>
+                )}
+              </button>
+              {activeTab === 'ts' ? (
+                <pre className="text-sm leading-relaxed overflow-x-auto">
+                  <code className="text-[#00ff00] block">
+                    {`import {
+  Has,
+  Package,
+  Public,
+  SuiEvent,
+  SuiObject,
+  TxContext,
+  u64,
+  UID,
+  String,
+  Transfer,
+  ID,
+} from "typescript-move";
+
+interface Person extends Has<"key" | "store"> {
+  id: UID;
+  name: String;
+  lastname: String;
+  age: u64;
+}
+
+interface PersonCreatedEvent extends Has<"copy" | "drop"> {
+  person_id: ID;
+  name: String;
+  lastname: String;
+  age: u64;
+  owner: any;
+}
+
+@Package("version2")
+export class Writei {
+  @Public()
+  createPerson(name: String, lastname: String, age: u64, ctx: TxContext) {
+    let person_id: UID = SuiObject.createObjectId(ctx);
+    let sender: string = TxContext.sender(ctx);
+
+    SuiEvent.emit<PersonCreatedEvent>({
+      person_id: SuiObject.uidToInner(person_id),
+      name,
+      lastname,
+      age,
+      owner: sender,
+    });
+
+    let newPerson: Person = {
+      id: person_id,
+      name,
+      lastname,
+      age,
     };
+
+    Transfer.transfer<Person>(newPerson, sender);
+  }
+
+  @Public()
+  getUser(person: Person) {
+    const name = person.name;
+    const lastname = person.lastname;
+    return { name, lastname };
   }
 }`}
                   </code>
@@ -214,33 +373,225 @@ class MyContract {
               ) : (
                 <pre className="text-sm leading-relaxed overflow-x-auto">
                   <code className="text-[#00ff00] block">
-                    {`module hello_world::mycontract {
+                    {`module version2::writei {
   use std::string::String;
+  use sui::event;
 
-  public fun createPerson(
+  public struct Person has key, store {
+    id: object::UID,
     name: String,
-    age: u64,
-    ctx: &mut TxContext
-  ) {
-    let person = Person {
-      id: sui::object::new(ctx),
-      name,
-      age
-    };
-
-    sui::transfer::transfer(
-      person,
-      sui::tx_context::sender(ctx)
-    );
+    lastname: String,
+    age: u64
   }
 
-  public fun getUser(p: &Person): (String, u64) {
-    (p.name, p.age)
+  public struct PersonCreatedEvent has copy, drop {
+    person_id: object::ID,
+    name: String,
+    lastname: String,
+    age: u64,
+    owner: address
+  }
+
+  #[allow(lint(self_transfer))]
+  public fun createPerson(name: String, lastname: String, age: u64, ctx: &mut tx_context::TxContext) {
+    let person_id = object::new(ctx);
+    let sender = tx_context::sender(ctx);
+    event::emit(PersonCreatedEvent {
+      person_id: object::uid_to_inner(&person_id),
+      name,
+      lastname,
+      age,
+      owner: sender
+    });
+    let newPerson = Person { id: person_id, name, lastname, age };
+    transfer::transfer(newPerson, sender);
+  }
+
+  public fun getUser(p: &Person): (String, String) {
+    (p.name, p.lastname)
   }
 }`}
                   </code>
                 </pre>
               )}
+            </div>
+          </div>
+
+          {/* Step by Step Guide */}
+          <div className="mt-12 space-y-6">
+            <h3 className="text-2xl font-bold border-l-4 border-white pl-4">
+              [QUICK_START_GUIDE]
+            </h3>
+
+            <div className="grid gap-4">
+              {/* Step 1 */}
+              <div className="border-2 border-white p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-white text-black font-bold flex items-center justify-center">
+                    01
+                  </div>
+                  <h4 className="text-lg font-bold">Install typescript-move</h4>
+                </div>
+                <div className="relative">
+                  <code className="block bg-black border border-[#333] p-3 pr-20 text-[#00ff00] text-sm">
+                    npm install -g typescript-move
+                  </code>
+                  <button
+                    onClick={() => copyToClipboard('npm install -g typescript-move', 'step1')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-[#333] hover:bg-[#444] transition-colors text-xs flex items-center gap-1"
+                  >
+                    {copiedCode === 'step1' ? (
+                      <>
+                        <Check className="w-3 h-3" />
+                        COPIED
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        COPY
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Step 2 */}
+              <div className="border-2 border-white p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-white text-black font-bold flex items-center justify-center">
+                    02
+                  </div>
+                  <h4 className="text-lg font-bold">Create contract.sui.ts</h4>
+                </div>
+                <p className="text-[#888] text-sm mb-2">Copy the TypeScript code above into a new file</p>
+                <div className="relative">
+                  <code className="block bg-black border border-[#333] p-3 pr-20 text-[#00ff00] text-sm">
+                    touch contract.sui.ts
+                  </code>
+                  <button
+                    onClick={() => copyToClipboard('touch contract.sui.ts', 'step2')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-[#333] hover:bg-[#444] transition-colors text-xs flex items-center gap-1"
+                  >
+                    {copiedCode === 'step2' ? (
+                      <>
+                        <Check className="w-3 h-3" />
+                        COPIED
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        COPY
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Step 3 */}
+              <div className="border-2 border-white p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-white text-black font-bold flex items-center justify-center">
+                    03
+                  </div>
+                  <h4 className="text-lg font-bold">Compile to Move</h4>
+                </div>
+                <div className="relative">
+                  <code className="block bg-black border border-[#333] p-3 pr-20 text-[#00ff00] text-sm">
+                    typescript-move --compileV2 contract.sui.ts
+                  </code>
+                  <button
+                    onClick={() => copyToClipboard('typescript-move --compileV2 contract.sui.ts', 'step3')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-[#333] hover:bg-[#444] transition-colors text-xs flex items-center gap-1"
+                  >
+                    {copiedCode === 'step3' ? (
+                      <>
+                        <Check className="w-3 h-3" />
+                        COPIED
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        COPY
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Step 4 */}
+              <div className="border-2 border-white p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-white text-black font-bold flex items-center justify-center">
+                    04
+                  </div>
+                  <h4 className="text-lg font-bold">Copy output to .move file</h4>
+                </div>
+                <p className="text-[#888] text-sm mb-2">Paste the compiled Move code into your sources directory</p>
+              </div>
+
+              {/* Step 5 */}
+              <div className="border-2 border-white p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-white text-black font-bold flex items-center justify-center">
+                    05
+                  </div>
+                  <h4 className="text-lg font-bold">Build with Sui Move</h4>
+                </div>
+                <p className="text-[#888] text-sm mb-2">Compile your Move package</p>
+                <div className="relative">
+                  <code className="block bg-black border border-[#333] p-3 pr-20 text-[#00ff00] text-sm">
+                    sui move build
+                  </code>
+                  <button
+                    onClick={() => copyToClipboard('sui move build', 'step5')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-[#333] hover:bg-[#444] transition-colors text-xs flex items-center gap-1"
+                  >
+                    {copiedCode === 'step5' ? (
+                      <>
+                        <Check className="w-3 h-3" />
+                        COPIED
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        COPY
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Step 6 */}
+              <div className="border-2 border-white p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 bg-white text-black font-bold flex items-center justify-center">
+                    06
+                  </div>
+                  <h4 className="text-lg font-bold">Deploy to Sui</h4>
+                </div>
+                <p className="text-[#888] text-sm mb-2">Publish your contract to Sui network</p>
+                <div className="relative">
+                  <code className="block bg-black border border-[#333] p-3 pr-20 text-[#00ff00] text-sm">
+                    sui client publish --gas-budget 100000000
+                  </code>
+                  <button
+                    onClick={() => copyToClipboard('sui client publish --gas-budget 100000000', 'step6')}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-1 bg-[#333] hover:bg-[#444] transition-colors text-xs flex items-center gap-1"
+                  >
+                    {copiedCode === 'step6' ? (
+                      <>
+                        <Check className="w-3 h-3" />
+                        COPIED
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3 h-3" />
+                        COPY
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

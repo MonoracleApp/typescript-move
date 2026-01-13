@@ -86,7 +86,7 @@ export default function Docs() {
             >
               V2_API [RECOMMENDED]
             </button>
-            <button
+            {/* <button
               onClick={() => switchVersion('v1')}
               className={`w-full px-4 py-2 font-bold text-sm border-t-2 border-white transition-colors ${
                 version === 'v1'
@@ -95,7 +95,7 @@ export default function Docs() {
               }`}
             >
               V1_API [DECORATOR]
-            </button>
+            </button> */}
           </div>
 
           {/* Navigation */}
