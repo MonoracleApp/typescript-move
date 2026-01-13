@@ -41,12 +41,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/move-ts.git"
+    "url": "https://github.com/MonoracleApp/ts-move"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/move-ts/issues"
+    "url": "https://github.com/MonoracleApp/ts-move/issues"
   },
-  "homepage": "https://github.com/yourusername/move-ts#readme",
+  "homepage": "https://github.com/MonoracleApp/ts-move#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "reflect-metadata": "^0.2.2",
