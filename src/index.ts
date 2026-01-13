@@ -5,6 +5,21 @@ import { compile } from "./lib/compile";
 import { create } from "./lib/create";
 import { compileV2 } from "./lib/compile-v2";
 
+// Export Decorators (V1 API)
+export { Module, Public, Write, Mint, Balance, Assert, Vector, Push, Move, Package } from './decorators';
+
+// Export V2 API
+export { Has } from './lib/v2/abilities';
+export { String, u8, u16, u32, u64, u128, u256, bool, address, UID, ID } from './lib/v2/types';
+export { TxContext } from './lib/v2/tx-context';
+export { SuiObject } from './lib/v2/sui-object';
+export { Transfer } from './lib/v2/transfer';
+export { SuiEvent } from './lib/v2/event';
+
+// Export V1 types
+export { sui, primitive } from './types';
+export type { BalanceFor, Mut, Primitive, HasProps, TransferType, VectorFeatures } from './types';
+
 /**
  * Main CLI entry point
  */

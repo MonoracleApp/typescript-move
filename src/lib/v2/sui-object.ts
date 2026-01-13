@@ -3,10 +3,10 @@ import { UID, ID } from "./types";
 
 export class SuiObject {
   static createObjectId(ctx: TxContext): UID {
-    return "UID";
+    return {} as UID;
   }
 
   static uidToInner(uid: UID): ID {
-    return "ID";
+    return {} as ID;
   }
 }

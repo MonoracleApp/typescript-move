@@ -1,7 +1,9 @@
+import { address } from "./types";
+
 export class TxContext {
   ctx?: TxContext;
 
-  static sender(ctx: TxContext): any {
-    return "address";
+  static sender(ctx: TxContext): address {
+    return "" as address;
   }
 }

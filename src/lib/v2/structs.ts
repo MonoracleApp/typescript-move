@@ -23,13 +23,16 @@ function mapTypeScriptToMove(tsType: string): string {
   // Direct mappings
   const typeMap: Record<string, string> = {
     'String': 'String',
+    'string': 'String',
     'u64': 'u64',
     'u32': 'u32',
     'u8': 'u8',
     'u16': 'u16',
     'u128': 'u128',
     'u256': 'u256',
+    'number': 'u64',
     'bool': 'bool',
+    'boolean': 'bool',
     'address': 'address',
     'any': 'address',
     'UID': 'object::UID',
