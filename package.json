@@ -1,6 +1,6 @@
 {
   "name": "typescript-move",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "TypeScript to Sui Move transpiler - Write Sui smart contracts using TypeScript syntax",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -41,12 +41,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/MonoracleApp/ts-move"
+    "url": "https://github.com/MonoracleApp/typescript-move"
   },
   "bugs": {
-    "url": "https://github.com/MonoracleApp/ts-move/issues"
+    "url": "https://github.com/MonoracleApp/typescript-move/issues"
   },
-  "homepage": "https://github.com/MonoracleApp/ts-move#readme",
+  "homepage": "https://github.com/MonoracleApp/typescript-move#readme",
   "dependencies": {
     "chalk": "^4.1.2",
     "reflect-metadata": "^0.2.2",
